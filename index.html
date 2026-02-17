@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CH_XEC - Al-Shamkhani</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- SDK الإعلان -->
+    <script src='//libtl.com/sdk.js' data-zone='10622687' data-sdk='show_10622687'></script>
+
+    <style>
+        :root {
+            --primary: #FBBF24;        /* اللون الذهبي بدلاً من الأزرق */
+            --bg: #0b0f1a;
+            --card: #161b2a;
+            --text-main: #ffffff;
+            --upgrade: #22c55e;
+            --withdraw: #FBBF24;        /* تغيير لون السحب للذهبي */
+            --reward: #8b5cf6;
+            --referral: #3b82f6;
+            --stats: #94a3b8;
+            --telegram-blue: #0088cc;
+            --error: #ef4444;
+            --success: #10b981;
+            --subscribe: #0088cc;
+            --red-dot: #ef4444;
+            --notification: #8b5cf6;
+            --support: #3b82f6;
+            --boost: #FFD700;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        body { 
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .game-container {
+            aspect-ratio: 9 / 16;
+            max-width: 100%;
+            max-height: 98vh;
+            width: auto;
+            height: auto;
+            min-width: 360px;
+            min-height: 640px;
+            background: linear-gradient(145deg, #0d121c, #0b0f1a);
+            display: flex;
+            flex-direction: column;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .game-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B);
+            border: 2px solid #DAA520;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            animation: bubble-float linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: 0 0 5px black;
+        }
+        
+        .bubble::before {
+            content: "₿";
+            font-size: inherit;
+        }
+        
+        @keyframes bubble-float {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        }
+        
+        header { 
+            width: 100%; 
+            padding: 8px 16px; 
+            text-align: center; 
+            background: rgba(22, 27, 42, 0.95); 
+            border-bottom: 1px solid #2d3748; 
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        
+        .balance-container {
+            margin-top: 0;
+            position: relative;
+        }
+        
+        .balance-label { 
+            color: #94a3b8; 
+            font-size: 0.7rem;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .balance-amount { 
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+            background: linear-gradient(90deg, #FBBF24, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        
+        .power-display {
+            color: var(--upgrade);
+            font-size: 0.7rem;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* قسم التعدين الجديد */
+        .mining-section {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 6px 12px;
+            margin: 6px 0 2px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 10px rgba(251,191,36,0.2);
+        }
+        .mining-info {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.7rem;
+        }
+        .mining-label {
+            color: #94a3b8;
+        }
+        .mining-value {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .mining-collect-btn {
+            background: linear-gradient(135deg, var(--primary), #B8860B);
+            border: none;
+            color: black;
+            font-weight: bold;
+            border-radius: 30px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .mining-collect-btn:hover {
+            transform: scale(1.05);
+        }
+        .mining-collect-btn:active {
+            transform: scale(0.95);
+        }
+        
+        main { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+            position: relative; 
+            overflow: hidden;
+            padding: 5px 0;
+            z-index: 5;
+        }
+        
+        .coin-wrapper { 
+            width: 220px; 
+            height: 220px; 
+            border-radius: 50%; 
+            background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B);
+            border: 8px solid #DAA520;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.4);
+            cursor: pointer;
+            transition: transform 0.1s;
+            z-index: 10;
+        }
+        
+        @media (max-width: 400px) {
+            .coin-wrapper {
+                width: 180px;
+                height: 180px;
+            }
+        }
+        
+        .coin-wrapper:active {
+            transform: scale(0.95);
+        }
+
+        .coin-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            pointer-events: none; 
+        }
+        
+        .click-effect {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            transform: translate(-50%, -50%);
+            animation: click-pulse 0.6s ease-out;
+        }
+
+        @keyframes click-pulse {
+            0% { width: 20px; height: 20px; opacity: 1; }
+            100% { width: 140px; height: 140px; opacity: 0; }
+        }
+
+        .floating-number {
+            position: fixed;
+            color: #fbbf24;
+            font-size: 2rem;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1000;
+            animation: float-up 0.8s ease-out forwards;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
+        }
+
+        .subscribe-btn {
+            position: absolute;
+            bottom: 70px;
+            right: 10px;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--subscribe), #006699);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+            cursor: pointer;
+            z-index: 500;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+        
+        .subscribe-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6);
+        }
+        
+        .subscribe-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .red-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 12px;
+            height: 12px;
+            background-color: var(--red-dot);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+        }
+
+        .support-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 10px;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--support), #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            cursor: pointer;
+            z-index: 500;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+        
+        .support-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+        
+        .support-btn:active {
+            transform: scale(0.9);
+        }
+
+        .footer-section { 
+            width: 100%; 
+            background: var(--card); 
+            padding: 10px 8px;
+            border-radius: 20px 20px 0 0; 
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        
+        .actions-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px; 
+        }
+        
+        .card { 
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            padding: 8px 4px; 
+            border-radius: 10px; 
+            border: 1px solid #334155; 
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: #475569;
+        }
+        
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            font-size: 0.7rem;
+        }
+        
+        .card-title svg {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .card-value {
+            font-size: 0.8rem;
+            margin: 2px 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .card-desc {
+            font-size: 0.55rem; 
+            color: #94a3b8;
+            margin: 2px 0;
+        }
+        
+        .btn { 
+            color: white; 
+            border: none; 
+            padding: 4px 6px; 
+            border-radius: 6px; 
+            width: 100%; 
+            font-weight: bold; 
+            margin-top: 4px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-size: 0.65rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-upgrade { 
+            background: linear-gradient(135deg, var(--upgrade), #16a34a); 
+        }
+        
+        .btn-withdraw { 
+            background: linear-gradient(135deg, var(--withdraw), #d97706);
+            color: #000; 
+        }
+        
+        .btn-reward {
+            background: linear-gradient(135deg, var(--reward), #6b21a5);
+        }
+        
+        .btn-referral {
+            background: linear-gradient(135deg, var(--referral), #1d4ed8);
+        }
+
+        .btn-stats {
+            background: linear-gradient(135deg, #64748b, #475569);
+        }
+        
+        .btn:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .modal-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.9); 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 2000; 
+            backdrop-filter: blur(5px);
+            animation: fade-in 0.3s ease-out;
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal { 
+            background: var(--card); 
+            width: 85%; 
+            max-width: 320px;
+            padding: 20px; 
+            border-radius: 20px; 
+            text-align: center; 
+            border: 2px solid var(--withdraw);
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.3);
+            animation: modal-appear 0.3s ease-out;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--withdraw), #fbbf24, var(--withdraw));
+            border-radius: 22px;
+            z-index: -1;
+            animation: border-glow 2s linear infinite;
+        }
+        
+        @keyframes border-glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes modal-appear {
+            from { transform: scale(0.8) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+        
+        .modal-close-btn:hover {
+            background: rgba(239, 68, 68, 0.4);
+            transform: scale(1.1);
+        }
+        
+        .modal-close-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .modal h3 {
+            margin-top: 0;
+            color: var(--withdraw);
+            margin-bottom: 15px;
+            padding-right: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .modal input { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 8px 0; 
+            border-radius: 8px; 
+            border: 1px solid #334155; 
+            background: #0f172a; 
+            color: white; 
+            text-align: center;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: var(--withdraw);
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .username-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
+        .username-at-symbol {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 0.9rem;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .username-input {
+            padding-left: 30px !important;
+            text-align: left !important;
+        }
+        
+        .modal-buttons { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 20px; 
+        }
+        
+        .stats-modal {
+            border-color: var(--upgrade);
+        }
+        
+        .stats-modal::before {
+            background: linear-gradient(45deg, var(--upgrade), #22c55e, var(--upgrade));
+        }
+        
+        .referral-modal {
+            border-color: var(--referral);
+            width: 85%;
+            max-width: 300px;
+            padding: 16px;
+        }
+        
+        .referral-modal::before {
+            background: linear-gradient(45deg, var(--referral), #8b5cf6, var(--referral));
+        }
+        
+        .referral-modal h3 {
+            color: var(--referral);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .referral-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            transition: all 0.3s;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+        
+        .stat-value {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .referral-code-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+            padding: 12px;
+            border-radius: 8px;
+            border: 1.5px solid var(--referral);
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .referral-code {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--referral);
+            letter-spacing: 1px;
+            font-family: monospace;
+            margin: 6px 0;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid var(--referral);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(139, 92, 246, 0.4);
+        }
+        
+        .referral-link-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #334155;
+        }
+        
+        .referral-link-text {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            word-break: break-all;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            direction: ltr;
+            text-align: left;
+            font-family: monospace;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .share-btn {
+            flex: 1;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .telegram-share-btn {
+            background: linear-gradient(135deg, #0088cc, #006699);
+        }
+        
+        .referral-info-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #334155;
+        }
+        
+        .referral-info-title {
+            color: var(--referral);
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+        
+        .referral-info-text {
+            text-align: right;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 4px;
+            margin: 8px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #FFD700);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            animation: progress-shine 2s infinite;
+        }
+        
+        @keyframes progress-shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .withdraw-limits {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin: 8px 0;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .hint {
+            position: absolute;
+            bottom: 80px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: #fbbf24;
+            text-align: center;
+            max-width: 70%;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            z-index: 50;
+        }
+        
+        .referral-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: linear-gradient(135deg, var(--referral), #7c3aed);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 100;
+        }
+        
+        .central-notification {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            background: linear-gradient(135deg, var(--notification), #7c3aed);
+            padding: 18px 24px;
+            border-radius: 15px;
+            border-left: 5px solid var(--success);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 4000;
+            animation: central-slide-in 0.5s ease-out forwards, central-pulse 2s 0.5s infinite, central-slide-out 0.5s ease-out 3.5s forwards;
+            max-width: 80%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .central-notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border-left-color: var(--error);
+        }
+        
+        .central-notification.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-left-color: #f59e0b;
+        }
+        
+        .central-notification.info {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-left-color: #3b82f6;
+        }
+        
+        @keyframes central-slide-in {
+            0% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+            100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        
+        @keyframes central-pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.4); }
+            50% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.7); }
+        }
+        
+        @keyframes central-slide-out {
+            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            100% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+        }
+        
+        .notification-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        
+        .notification-message {
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .timer-message {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.7);
+            padding: 5px;
+            border-radius: 10px;
+            color: #fbbf24;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(251,191,36,0.3);
+            z-index: 20;
+            margin: 0 auto;
+            width: fit-content;
+            max-width: 90%;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- فقاعات -->
+        <div class="bubbles" id="bubblesContainer"></div>
+        
+        <div class="game-content">
+            <header>
+                <div class="balance-container">
+                    <div class="balance-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        رصيدك الحالي
+                    </div>
+                    <div id="balance" class="balance-amount">0</div>
+                    <div class="power-display">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                        قوة النقر: <span id="clickPower">1</span>
+                    </div>
+                </div>
+
+                <!-- قسم التعدين الجديد -->
+                <div class="mining-section" id="miningSection">
+                    <div class="mining-info">
+                        <span class="mining-label">⛏️ التعدين</span>
+                        <span class="mining-value" id="miningRate">0.1/sec</span>
+                    </div>
+                    <div class="mining-info">
+                        <span class="mining-label">⛏️ غير مجمّع</span>
+                        <span class="mining-value" id="miningBalance">0</span>
+                    </div>
+                    <button class="mining-collect-btn" id="collectMiningBtn">جمع</button>
+                </div>
+                
+                <div class="referral-badge" id="referralBadge" style="display: none;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                    <span id="referralCount">0/100</span>
+                </div>
+            </header>
+
+            <main>
+                <div class="hint" id="hint">✨ اضغط على العملة لجمع XEC</div>
+                
+                <!-- الأزرار الجانبية -->
+                <div class="subscribe-btn" id="subscribeBtn">
+                    <div class="red-dot" id="redDot"></div>
+                    <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
+                    </svg>
+                </div>
+                
+                <div class="support-btn" id="supportBtn">
+                    <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                    </svg>
+                </div>
+
+                <div class="click-area" id="clickZone" style="position: relative;">
+                    <div class="coin-wrapper">
+                        <img src="https://i.postimg.cc/hj1QRxwP/5809872956920892373-99.jpg" alt="XEC Logo" class="coin-img">
+                    </div>
+                    <div id="timerMessage" class="timer-message" style="display: none;"></div>
+                </div>
+            </main>
+
+            <!-- الفوتر – 5 أزرار -->
+            <section class="footer-section">
+                <div class="actions-grid">
+                    <!-- 1. إحصائيات -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/>
+                            </svg>
+                            إحصائيات
+                        </div>
+                        <div class="card-value" id="moreValue">📊</div>
+                        <div class="card-desc">إحصائيات</div>
+                        <button id="moreFooterBtn" class="btn btn-stats">
+                            <span>عرض</span>
+                        </button>
+                    </div>
+                    <!-- 2. أصدقاء -->
+                    <div class="card" id="friendsFooterCard">
+                        <div class="card-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                            </svg>
+                            أصدقاء
+                        </div>
+                        <div class="card-value" id="referralsCountFooter">0</div>
+                        <div class="card-desc">+1000</div>
+                        <button id="friendsFooterBtn" class="btn btn-referral">
+                            <span>دعوة</span>
+                        </button>
+                    </div>
+                    <!-- 3. مكافأة -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/>
+                            </svg>
+                            مكافأة
+                        </div>
+                        <div class="card-value" id="adsWatchedDisplay">0/25</div>
+                        <div class="card-desc">شاهد إعلان</div>
+                        <button id="rewardBtn" class="btn btn-reward">
+                            <span>شاهد</span>
+                        </button>
+                    </div>
+                    <!-- 4. سحب -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                            سحب
+                        </div>
+                        <div class="card-value" id="withdrawAmount">0</div>
+                        <div class="card-desc" id="withdrawDesc">5k كل 24h</div>
+                        <button id="withdrawBtn" class="btn btn-withdraw">
+                            <span>سحب</span>
+                        </button>
+                    </div>
+                    <!-- 5. تطوير -->
+                    <div class="card">
+                        <div class="card-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13c-2.33 0-4.31-1.46-5.11-3.5h10.22c-.8 2.04-2.78 3.5-5.11 3.5z"/>
+                            </svg>
+                            تطوير
+                        </div>
+                        <div class="card-value" id="upgradeCost">20</div>
+                        <div class="card-desc">قوة النقر</div>
+                        <button id="buyUpgrade" class="btn btn-upgrade">
+                            <span>شراء</span>
+                        </button>
+                        <div style="font-size:0.5rem; color:#94a3b8;" id="boostRemaining">5/5</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- النوافذ المنبثقة -->
+    <div class="modal-overlay" id="withdrawModal">
+        <div class="modal">
+            <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
+            <h3>⏬ تقديم طلب سحب</h3>
+            <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 8px; padding: 8px; margin-bottom: 10px; text-align: center; font-size: 0.75rem; color: #ef4444;">
+                ⚠️ تنبيه: يتم الدفع فقط لأصحاب حسابات Binance. يرجى إدخال معرف Binance (ID) الخاص بك، وليس عنوان محفظة.
+            </div>
+            <div class="withdraw-limits" id="withdrawLimits">
+                المبلغ: 0 XEC | سحب 5,000 XEC كل 24 ساعة
+            </div>
+            <div class="withdraw-limits" style="background: rgba(139,92,246,0.2); margin-top: 0;" id="withdrawStageInfo">
+                يمكنك سحب 5,000 XEC الآن
+            </div>
+            
+            <div class="username-input-wrapper">
+                <span class="username-at-symbol">@</span>
+                <input type="text" id="tgUsername" class="username-input" placeholder="اسم المستخدم بدون @" maxlength="50">
+            </div>
+            
+            <input type="text" id="binanceID" placeholder="معرف Binance (ID) فقط" maxlength="100">
+            
+            <div class="modal-buttons">
+                <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('withdrawModal')">إلغاء</button>
+                <button id="confirmBtn" class="btn btn-upgrade" onclick="submitWithdraw()">تأكيد السحب</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal stats-modal">
+            <div class="modal-close-btn" onclick="closeModal('statsModal')">×</div>
+            <h3>📊 إحصائيات البوت</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">النقرات في الجلسة</div>
+                    <div class="stat-value" id="totalClicks">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">قوة النقر الحالية</div>
+                    <div class="stat-value" id="currentPower">1</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">الترقيات المشتراة</div>
+                    <div class="stat-value" id="upgradesBought">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">آخر سحب</div>
+                    <div class="stat-value" id="lastWithdraw">لم يتم</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">إجمالي الأجهزة</div>
+                    <div class="stat-value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">الأجهزة النشطة</div>
+                    <div class="stat-value" id="activeUsers">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">الإعلانات المشاهدة</div>
+                    <div class="stat-value" id="adsWatchedStat">0/25</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">التعزيزات اليوم</div>
+                    <div class="stat-value" id="boostsUsedStat">0/5</div>
+                </div>
+            </div>
+            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('statsModal')">إغلاق</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="referralModal">
+        <div class="modal referral-modal">
+            <div class="modal-close-btn" onclick="closeModal('referralModal')">×</div>
+            <h3>👥 نظام الإحالة</h3>
+            <div class="referral-code-box">
+                <div class="copy-btn" onclick="copyReferralCode()">نسخ</div>
+                <div class="card-title" style="font-size: 0.85rem;">كود الإحالة</div>
+                <div class="referral-code" id="referralCode">تحميل...</div>
+                <div class="card-desc" style="font-size: 0.65rem;">شارك هذا الكود مع أصدقائك</div>
+            </div>
+            <div class="referral-link-container">
+                <div class="referral-link-text" id="referralLinkText">جاري تحميل رابط البوت...</div>
+                <div class="share-buttons">
+                    <button class="share-btn telegram-share-btn" id="shareReferralBtn">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
+                        </svg>
+                        مشاركة
+                    </button>
+                </div>
+            </div>
+            <div class="referral-grid">
+                <div class="stat-item">
+                    <div class="stat-label">الدعوات المنجزة</div>
+                    <div class="stat-value" id="referralsCompleted">0/100</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">المكافآت المجنبة</div>
+                    <div class="stat-value" id="referralRewards">0 XEC</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">مكافأة الدعوة</div>
+                    <div class="stat-value">1,000 XEC</div>
+                </div>
+            </div>
+            <div class="referral-info-box">
+                <div class="referral-info-title">🎯 كيف تعمل الإحالة:</div>
+                <div class="referral-info-text">
+                    1. شارك رابط البوت الخاص بك مع أصدقائك<br>
+                    2. عندما ينضم صديق عبر الرابط، تحصل على 1,000 XEC<br>
+                    3. الحد الأقصى: 100 دعوة<br>
+                    4. المكافأة تضاف إلى رصيدك
+                </div>
+            </div>
+            <div class="referral-info-box" style="border-color: var(--upgrade);">
+                <h4 style="color: var(--upgrade); margin: 0 0 6px 0; font-size: 0.85rem;">🎁 أدخل كود الإحالة</h4>
+                <input type="text" id="inputReferralCode" placeholder="أدخل كود الإحالة" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; text-align: center; font-size: 0.8rem;">
+                <button class="btn btn-upgrade" id="activateReferralBtn" style="margin-top: 8px; padding: 8px; font-size: 0.85rem;" onclick="useReferralCode()">تفعيل الكود</button>
+            </div>
+            <button class="btn" style="background: linear-gradient(135deg, #475569, #334155); margin-top: 10px; padding: 8px; font-size: 0.85rem;" onclick="closeModal('referralModal')">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        // 🔧 إعدادات البوت
+        const BOT_TOKEN = "8435866063:AAHAtO-fIRUnsTiiJXJ-GSQkRQ2xvGf9q88";
+        const ADMIN_CHAT_ID = "169545949";
+        const CHANNEL_URL = "https://t.me/ChMkHaNiC";
+        const BOT_USERNAME = "CH_BTTC_bot";  // يمكن تغييره لاحقاً
+        
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+        tg.setHeaderColor('#161b2a');
+        tg.setBackgroundColor('#0b0f1a');
+
+        const isTelegram = window.Telegram?.WebApp?.initData !== '' && window.Telegram?.WebApp?.initData !== undefined;
+
+        // ===== نظام معرف الجهاز الفريد =====
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('xec_device_id');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+                localStorage.setItem('xec_device_id', deviceId);
+            }
+            return deviceId;
+        }
+
+        // ===== عداد الأجهزة الفريدة =====
+        let totalUniqueDevices = 0;
+        let seenDevices = [];
+        let activeDevicesMap = new Map();
+
+        function initUniqueDevicesCounter() {
+            const savedCount = localStorage.getItem('xec_unique_devices_count');
+            const savedDevices = localStorage.getItem('xec_unique_devices_set');
+            const savedActive = localStorage.getItem('xec_active_devices_map');
+            
+            if (savedCount !== null) {
+                totalUniqueDevices = parseInt(savedCount, 10);
+            } else {
+                totalUniqueDevices = 0;
+                localStorage.setItem('xec_unique_devices_count', '0');
+            }
+            
+            if (savedDevices !== null) {
+                try { seenDevices = JSON.parse(savedDevices); } catch(e) { seenDevices = []; }
+            } else {
+                seenDevices = [];
+                localStorage.setItem('xec_unique_devices_set', JSON.stringify(seenDevices));
+            }
+
+            if (savedActive !== null) {
+                try {
+                    const parsed = JSON.parse(savedActive);
+                    activeDevicesMap = new Map(Object.entries(parsed));
+                } catch(e) { activeDevicesMap = new Map(); }
+            } else {
+                activeDevicesMap = new Map();
+                localStorage.setItem('xec_active_devices_map', JSON.stringify({}));
+            }
+
+            updateActiveDevicesCount();
+            updateTotalDevicesDisplay();
+        }
+
+        function updateActiveDevicesCount() {
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000;
+            for (let [deviceId, lastSeen] of activeDevicesMap.entries()) {
+                if (now - lastSeen > oneDay) {
+                    activeDevicesMap.delete(deviceId);
+                }
+            }
+            localStorage.setItem('xec_active_devices_map', JSON.stringify(Object.fromEntries(activeDevicesMap)));
+        }
+
+        function updateUniqueDevicesCounter() {
+            const deviceId = getDeviceId();
+            const now = Date.now();
+            
+            if (!seenDevices.includes(deviceId)) {
+                seenDevices.push(deviceId);
+                totalUniqueDevices++;
+                localStorage.setItem('xec_unique_devices_count', totalUniqueDevices.toString());
+                localStorage.setItem('xec_unique_devices_set', JSON.stringify(seenDevices));
+            }
+
+            activeDevicesMap.set(deviceId, now);
+            localStorage.setItem('xec_active_devices_map', JSON.stringify(Object.fromEntries(activeDevicesMap)));
+
+            updateActiveDevicesCount();
+            updateTotalDevicesDisplay();
+        }
+
+        function updateTotalDevicesDisplay() {
+            const totalEl = document.getElementById('totalUsers');
+            if (totalEl) totalEl.textContent = totalUniqueDevices.toLocaleString('en').replace(/,/g, '.');
+            const activeEl = document.getElementById('activeUsers');
+            if (activeEl) activeEl.textContent = activeDevicesMap.size.toLocaleString('en').replace(/,/g, '.');
+        }
+
+        // ===== نظام حفظ البيانات =====
+        function getStorageKey() {
+            return `xec_game_data_${getDeviceId()}`;
+        }
+
+        function saveGameData() {
+            try {
+                const key = getStorageKey();
+                const data = {
+                    coins: gameData.coins,
+                    clickPower: gameData.clickPower,
+                    clickCost: gameData.clickCost,
+                    totalClicks: gameData.totalClicks,
+                    upgradesBought: gameData.upgradesBought,
+                    lastWithdraw: gameData.lastWithdraw,
+                    adsWatched: gameData.adsWatched,
+                    lastAdReset: gameData.lastAdReset,
+                    dailyBoostCount: gameData.dailyBoostCount,
+                    lastBoostReset: gameData.lastBoostReset,
+                    referralCode: gameData.referralCode,
+                    referralsCount: gameData.referralsCount,
+                    referralRewards: gameData.referralRewards,
+                    usedReferralCode: gameData.usedReferralCode,
+                    hasSubscribed: gameData.hasSubscribed,
+                    clickMilestone: gameData.clickMilestone || 0,
+                    // بيانات التعدين
+                    miningPower: gameData.miningPower,
+                    minedBalance: gameData.minedBalance,
+                    lastMiningUpdate: gameData.lastMiningUpdate
+                };
+                localStorage.setItem(key, JSON.stringify(data));
+                console.log('✅ تم حفظ البيانات', data);
+            } catch(e) {
+                console.error('❌ فشل حفظ البيانات', e);
+            }
+        }
+
+        function loadGameData() {
+            try {
+                const key = getStorageKey();
+                const saved = localStorage.getItem(key);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data && typeof data === 'object') {
+                        console.log('✅ تم تحميل البيانات', data);
+                        return data;
+                    }
+                }
+            } catch (e) {
+                console.error('❌ فشل تحميل البيانات', e);
+            }
+            return null;
+        }
+
+        // بيانات اللعبة
+        let gameData = {};
+        const MAX_DAILY_BOOST = 5;
+        const MAX_ADS = 25;
+        const WITHDRAW_AMOUNT = 5000;          // تغيير مبلغ السحب إلى 5000
+        const COOLDOWN = 24 * 60 * 60 * 1000;
+        const CLICK_MILESTONE = 100000;         // كل 100 ألف نقرة
+        const MILESTONE_REWARD = 5000;           // 5000 XEC
+
+        function initGameData() {
+            const saved = loadGameData();
+            const now = Date.now();
+            if (saved) {
+                gameData = {
+                    coins: saved.coins || 0,
+                    clickPower: saved.clickPower || 1,
+                    clickCost: saved.clickCost || 20,
+                    totalClicks: saved.totalClicks || 0,
+                    upgradesBought: saved.upgradesBought || 0,
+                    lastWithdraw: saved.lastWithdraw || 0,
+                    adsWatched: saved.adsWatched || 0,
+                    lastAdReset: saved.lastAdReset || now,
+                    dailyBoostCount: saved.dailyBoostCount || 0,
+                    lastBoostReset: saved.lastBoostReset || now,
+                    referralCode: saved.referralCode || generateReferralCode(),
+                    referralsCount: saved.referralsCount || 0,
+                    referralRewards: saved.referralRewards || 0,
+                    maxReferrals: 100,
+                    referralBonus: 1000,
+                    usedReferralCode: saved.usedReferralCode || false,
+                    hasSubscribed: saved.hasSubscribed || false,
+                    clickMilestone: saved.clickMilestone || 0,
+                    // التعدين
+                    miningPower: saved.miningPower || 0.1,   // 0.1 XEC لكل ثانية
+                    minedBalance: saved.minedBalance || 0,
+                    lastMiningUpdate: saved.lastMiningUpdate || now
+                };
+                console.log('✅ تم تهيئة البيانات من المحفوظات', gameData);
+            } else {
+                gameData = {
+                    coins: 0,
+                    clickPower: 1,
+                    clickCost: 20,
+                    totalClicks: 0,
+                    upgradesBought: 0,
+                    lastWithdraw: 0,
+                    adsWatched: 0,
+                    lastAdReset: now,
+                    dailyBoostCount: 0,
+                    lastBoostReset: now,
+                    referralCode: generateReferralCode(),
+                    referralsCount: 0,
+                    referralRewards: 0,
+                    maxReferrals: 100,
+                    referralBonus: 1000,
+                    usedReferralCode: false,
+                    hasSubscribed: false,
+                    clickMilestone: 0,
+                    miningPower: 0.1,
+                    minedBalance: 0,
+                    lastMiningUpdate: now
+                };
+                console.log('🆕 تم إنشاء بيانات جديدة');
+            }
+
+            if (now - gameData.lastAdReset > COOLDOWN) {
+                gameData.adsWatched = 0;
+                gameData.lastAdReset = now;
+            }
+            if (now - gameData.lastBoostReset > COOLDOWN) {
+                gameData.dailyBoostCount = 0;
+                gameData.lastBoostReset = now;
+            }
+        }
+
+        function generateReferralCode() {
+            try {
+                if (isTelegram) {
+                    const tgUser = tg.initDataUnsafe?.user;
+                    if (tgUser?.id) return `tg_${tgUser.id}`;
+                    if (tgUser?.username) return `tg_${tgUser.username}`;
+                }
+            } catch (e) {}
+            const randomNum = Math.floor(Math.random() * 1000000000);
+            return `tg_${randomNum}`;
+        }
+
+        // دالة تحديث التعدين
+        function updateMining() {
+            const now = Date.now();
+            const elapsedSeconds = (now - gameData.lastMiningUpdate) / 1000;
+            if (elapsedSeconds > 0) {
+                const earned = elapsedSeconds * gameData.miningPower;
+                gameData.minedBalance += earned;
+                gameData.lastMiningUpdate = now;
+                // تحديث العرض
+                document.getElementById('miningBalance').textContent = gameData.minedBalance.toFixed(2);
+                document.getElementById('miningRate').textContent = gameData.miningPower.toFixed(2) + '/sec';
+                saveGameData();
+            }
+        }
+
+        function canWithdraw() {
+            const now = Date.now();
+            return (gameData.coins >= WITHDRAW_AMOUNT) && (now - gameData.lastWithdraw >= COOLDOWN) && (gameData.adsWatched >= MAX_ADS);
+        }
+
+        function getTimeRemaining() {
+            const now = Date.now();
+            const next = gameData.lastWithdraw + COOLDOWN;
+            if (now >= next) return 0;
+            return next - now;
+        }
+
+        function formatTime(ms) {
+            if (ms <= 0) return 'متاح الآن';
+            const hours = Math.floor(ms / 3600000);
+            const minutes = Math.floor((ms % 3600000) / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            return `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        function updateWithdrawUI() {
+            const withdrawBtn = document.getElementById('withdrawBtn');
+            const withdrawDesc = document.getElementById('withdrawDesc');
+            const withdrawAmount = Math.floor(gameData.coins);
+            document.getElementById('withdrawAmount').textContent = withdrawAmount.toLocaleString();
+
+            if (canWithdraw()) {
+                withdrawBtn.disabled = false;
+                withdrawDesc.textContent = 'يمكنك سحب 5,000';
+            } else {
+                withdrawBtn.disabled = true;
+                withdrawDesc.textContent = 'سحب 5k كل 24h';
+            }
+        }
+
+        function updateAdsUI() {
+            const adsDisplay = document.getElementById('adsWatchedDisplay');
+            const adsStat = document.getElementById('adsWatchedStat');
+            if (adsDisplay) adsDisplay.textContent = `${gameData.adsWatched}/${MAX_ADS}`;
+            if (adsStat) adsStat.textContent = `${gameData.adsWatched}/${MAX_ADS}`;
+        }
+
+        function updateBoostUI() {
+            const boostRemaining = document.getElementById('boostRemaining');
+            const boostsUsedStat = document.getElementById('boostsUsedStat');
+            const remaining = MAX_DAILY_BOOST - gameData.dailyBoostCount;
+            if (boostRemaining) boostRemaining.textContent = `${remaining}/${MAX_DAILY_BOOST}`;
+            if (boostsUsedStat) boostsUsedStat.textContent = `${gameData.dailyBoostCount}/${MAX_DAILY_BOOST}`;
+            
+            const upgradeBtn = document.getElementById('buyUpgrade');
+            if (gameData.dailyBoostCount >= MAX_DAILY_BOOST) {
+                upgradeBtn.disabled = true;
+            } else {
+                upgradeBtn.disabled = gameData.coins < gameData.clickCost;
+            }
+        }
+
+        function updateClickAbility() {
+            const coinWrapper = document.querySelector('.coin-wrapper');
+            const timerMsg = document.getElementById('timerMessage');
+            if (gameData.coins >= WITHDRAW_AMOUNT) {
+                coinWrapper.style.pointerEvents = 'none';
+                coinWrapper.style.opacity = '0.6';
+                const remaining = getTimeRemaining();
+                if (remaining > 0) {
+                    timerMsg.style.display = 'block';
+                    timerMsg.innerHTML = `⏳ تم جمع 5,000. السحب متاح بعد: ${formatTime(remaining)}`;
+                } else {
+                    if (gameData.adsWatched < MAX_ADS) {
+                        timerMsg.style.display = 'block';
+                        timerMsg.innerHTML = `📢 تحتاج مشاهدة ${MAX_ADS-gameData.adsWatched} إعلان لتتمكن من السحب`;
+                    } else {
+                        timerMsg.style.display = 'none';
+                        coinWrapper.style.pointerEvents = 'auto';
+                        coinWrapper.style.opacity = '1';
+                    }
+                }
+            } else {
+                coinWrapper.style.pointerEvents = 'auto';
+                coinWrapper.style.opacity = '1';
+                timerMsg.style.display = 'none';
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
+            document.getElementById('clickPower').textContent = gameData.clickPower;
+            document.getElementById('upgradeCost').textContent = gameData.clickCost;
+            
+            updateWithdrawUI();
+            updateAdsUI();
+            updateBoostUI();
+            updateClickAbility();
+            updateTotalDevicesDisplay();
+            
+            document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
+            document.getElementById('currentPower').textContent = gameData.clickPower;
+            document.getElementById('upgradesBought').textContent = gameData.upgradesBought;
+            
+            if (gameData.lastWithdraw === 0) {
+                document.getElementById('lastWithdraw').textContent = "لم يتم";
+            } else {
+                const date = new Date(gameData.lastWithdraw);
+                document.getElementById('lastWithdraw').textContent = date.toLocaleString('ar-EG');
+            }
+            
+            document.getElementById('referralsCountFooter').textContent = gameData.referralsCount;
+            document.getElementById('moreValue').textContent = '📊';
+            
+            // تحديث واجهة التعدين
+            document.getElementById('miningBalance').textContent = gameData.minedBalance.toFixed(2);
+            document.getElementById('miningRate').textContent = gameData.miningPower.toFixed(2) + '/sec';
+            
+            updateReferralUI();
+            updateSubscriptionUI();
+        }
+        
+        function updateReferralUI() {
+            if (gameData.referralCode) {
+                document.getElementById('referralCode').textContent = gameData.referralCode;
+                document.getElementById('referralsCompleted').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
+                document.getElementById('referralRewards').textContent = `${gameData.referralRewards.toLocaleString()} XEC`;
+                
+                document.getElementById('referralCount').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
+                document.getElementById('referralBadge').style.display = gameData.referralsCount > 0 ? 'flex' : 'none';
+                
+                const botLink = `https://t.me/${BOT_USERNAME}?start=${gameData.referralCode}`;
+                const referralLinkText = document.getElementById('referralLinkText');
+                if (referralLinkText) {
+                    referralLinkText.innerHTML = `<span style="direction: ltr; display: block;">${botLink}</span>`;
+                }
+            }
+        }
+        
+        function updateSubscriptionUI() {
+            if (gameData.hasSubscribed) {
+                document.getElementById('redDot').style.display = 'none';
+            } else {
+                document.getElementById('redDot').style.display = 'block';
+            }
+        }
+        
+        function createClickEffect(x, y) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            effect.style.left = `${x}px`;
+            effect.style.top = `${y}px`;
+            document.body.appendChild(effect);
+            setTimeout(() => effect.remove(), 600);
+        }
+        
+        function spawnFloatingNumber(x, y, value) {
+            const el = document.createElement('div');
+            el.className = 'floating-number';
+            el.textContent = `+${value}`;
+            el.style.left = `${x}px`;
+            el.style.top = `${y}px`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
+        
+        function showCentralNotification(message, type = "success") {
+            const notification = document.createElement('div');
+            notification.className = `central-notification ${type}`;
+            let icon = "✅";
+            if (type === "error") icon = "❌";
+            else if (type === "warning") icon = "⚠️";
+            else if (type === "info") icon = "ℹ️";
+            
+            notification.innerHTML = `
+                <div class="notification-icon">${icon}</div>
+                <div class="notification-message">${message}</div>
+            `;
+            document.body.appendChild(notification);
+            notification.style.animation = 'none';
+            setTimeout(() => {
+                notification.style.animation = 'central-slide-in 0.5s ease-out forwards, central-pulse 2s 0.5s infinite, central-slide-out 0.5s ease-out 3.5s forwards';
+            }, 10);
+            setTimeout(() => notification.remove(), 4000);
+        }
+        
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        function subscribeToChannel() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
+            tg.openTelegramLink(CHANNEL_URL);
+            if (!gameData.hasSubscribed) {
+                gameData.coins += 1000;
+                gameData.hasSubscribed = true;
+                saveGameData();
+                updateUI();
+                showCentralNotification("🎉 لقد حصلت على 1000 XEC كهدية للاشتراك في القناة!", "success");
+                updateSubscriptionUI();
+            }
+        }
+        
+        function openSupport() {
+            tg.openTelegramLink('https://t.me/chmkhani');
+            showCentralNotification("👨‍💻 تم فتح رابط الدعم الفني", "info");
+        }
+        
+        function copyReferralCode() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
+            if (gameData.referralCode) {
+                const textArea = document.createElement('textarea');
+                textArea.value = gameData.referralCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCentralNotification("✅ تم نسخ كود الإحالة", "success");
+            }
+        }
+        
+        function shareReferralLink() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
+            if (gameData.referralCode) {
+                const botLink = `https://t.me/${BOT_USERNAME}?start=${gameData.referralCode}`;
+                const shareText = `انضم إلي في لعبة CH_XEC واحصل على 1,000 XEC كمكافأة! استخدم كود الإحالة الخاص بي: ${gameData.referralCode}`;
+                tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(shareText)}`);
+                showCentralNotification("📤 تم فتح نافذة المشاركة", "info");
+            }
+        }
+        
+        function useReferralCode() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
+            const inputCode = document.getElementById('inputReferralCode').value.trim();
+            if (!inputCode) {
+                showCentralNotification("❌ يرجى إدخال كود الإحالة", "error");
+                return;
+            }
+            if (gameData.usedReferralCode) {
+                showCentralNotification("❌ لقد استخدمت كود إحالة مسبقًا", "error");
+                return;
+            }
+            if (inputCode === gameData.referralCode) {
+                showCentralNotification("❌ لا يمكنك استخدام كود الإحالة الخاص بك", "error");
+                return;
+            }
+            
+            gameData.referralsCount++;
+            gameData.referralRewards += 1000;
+            gameData.coins += 1000;
+            gameData.usedReferralCode = true;
+            saveGameData();
+            updateUI();
+            
+            showCentralNotification("✅ تم تفعيل كود الإحالة بنجاح! +1000 XEC", "success");
+            document.getElementById('inputReferralCode').value = '';
+            setTimeout(() => closeModal('referralModal'), 2000);
+        }
+
+        function watchRewardedAd() {
+            if (!isTelegram) {
+                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
+            if (gameData.adsWatched >= MAX_ADS) {
+                showCentralNotification("✅ لقد شاهدت جميع الإعلانات المطلوبة!", "info");
+                return;
+            }
+            if (typeof window.show_10622687 !== 'function') {
+                showCentralNotification("❌ الإعلان غير متاح حالياً", "error");
+                return;
+            }
+
+            window.show_10622687().then(() => {
+                gameData.adsWatched++;
+                saveGameData();
+                updateUI();
+                showCentralNotification(`🎉 شكراً لمشاهدة الإعلان! (${gameData.adsWatched}/${MAX_ADS})`, "success");
+                if (gameData.adsWatched >= MAX_ADS) {
+                    showCentralNotification("✅ الآن يمكنك السحب!", "success");
+                }
+            }).catch((error) => {
+                console.error('فشل عرض الإعلان:', error);
+                showCentralNotification("⚠️ تعذر عرض الإعلان، حاول لاحقاً", "warning");
+            });
+        }
+        
+        async function sendWithdrawToBot(username, binanceId, amount) {
+            try {
+                const message = `تفاصيل عملية السحب
+━━━━━━━━━━━━━━━━━━
+💰 المبلغ المسحوب: ${amount} XEC
+👤 اسم الشخص: ${username}
+💳 حساب بينانس: ${binanceId}
+━━━━━━━━━━━━━━━━━━`;
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: message })
+                });
+                const data = await response.json();
+                return data.ok;
+            } catch (error) {
+                console.error(error);
+                return false;
+            }
+        }
+        
+        document.getElementById('clickZone').addEventListener('click', (e) => {
+            if (gameData.coins >= WITHDRAW_AMOUNT) return;
+            
+            // إضافة العملات
+            gameData.coins += gameData.clickPower;
+            gameData.totalClicks++;
+            
+            // التحقق من المكافأة التراكمية (كل 100,000 نقرة)
+            const milestoneReached = Math.floor(gameData.totalClicks / CLICK_MILESTONE);
+            if (milestoneReached > gameData.clickMilestone) {
+                const newMilestones = milestoneReached - gameData.clickMilestone;
+                gameData.coins += newMilestones * MILESTONE_REWARD;
+                gameData.clickMilestone = milestoneReached;
+                showCentralNotification(`🏆 إنجاز! +${newMilestones * MILESTONE_REWARD} XEC مقابل ${CLICK_MILESTONE.toLocaleString()} نقرة!`, "success");
+            }
+            
+            saveGameData();
+            
+            const x = e.clientX, y = e.clientY;
+            createClickEffect(x, y);
+            spawnFloatingNumber(x, y, gameData.clickPower);
+            updateUI();
+        });
+        
+        document.getElementById('buyUpgrade').addEventListener('click', () => {
+            if (gameData.dailyBoostCount >= MAX_DAILY_BOOST) {
+                showCentralNotification("❌ لقد استنفدت جميع التعزيزات اليومية", "error");
+                return;
+            }
+            if (gameData.coins >= gameData.clickCost) {
+                gameData.coins -= gameData.clickCost;
+                gameData.clickPower++;
+                gameData.clickCost = Math.floor(gameData.clickCost * 1.8);
+                gameData.upgradesBought++;
+                gameData.dailyBoostCount++;
+                saveGameData();
+                
+                showCentralNotification(`🎉 تم التعزيز! قوة النقر الجديدة: ${gameData.clickPower}`, "success");
+                updateUI();
+            }
+        });
+        
+        document.getElementById('subscribeBtn').addEventListener('click', subscribeToChannel);
+        document.getElementById('supportBtn').addEventListener('click', openSupport);
+        
+        document.getElementById('withdrawBtn').addEventListener('click', () => {
+            if (canWithdraw()) {
+                openModal('withdrawModal');
+                try {
+                    const tgUser = tg.initDataUnsafe?.user;
+                    const usernameField = document.getElementById('tgUsername');
+                    if (tgUser?.username) {
+                        let username = tgUser.username;
+                        if (username.startsWith('@')) username = username.substring(1);
+                        usernameField.value = username;
+                    } else usernameField.value = '';
+                    usernameField.focus();
+                } catch (e) {}
+            } else {
+                if (gameData.adsWatched < MAX_ADS) {
+                    showCentralNotification(`💡 يجب مشاهدة ${MAX_ADS} إعلان أولاً (${gameData.adsWatched}/${MAX_ADS})`, "info");
+                } else if (gameData.coins < WITHDRAW_AMOUNT) {
+                    showCentralNotification(`💡 تحتاج ${WITHDRAW_AMOUNT.toLocaleString()} XEC للسحب`, "info");
+                } else {
+                    const remaining = getTimeRemaining();
+                    showCentralNotification(`⏳ السحب غير متاح، الوقت المتبقي: ${formatTime(remaining)}`, "warning");
+                }
+            }
+        });
+        
+        document.getElementById('rewardBtn').addEventListener('click', watchRewardedAd);
+        
+        document.getElementById('friendsFooterBtn').addEventListener('click', () => {
+            if (!isTelegram) {
+                showCentralNotification("❌ نظام الإحالة متاح فقط داخل تطبيق تليجرام", "error");
+                return;
+            }
+            openModal('referralModal');
+        });
+        document.getElementById('moreFooterBtn').addEventListener('click', () => openModal('statsModal'));
+        
+        // زر جمع التعدين
+        document.getElementById('collectMiningBtn').addEventListener('click', () => {
+            if (gameData.minedBalance > 0) {
+                gameData.coins += gameData.minedBalance;
+                showCentralNotification(`✅ تم جمع ${gameData.minedBalance.toFixed(2)} XEC من التعدين`, "success");
+                gameData.minedBalance = 0;
+                saveGameData();
+                updateUI();
+            } else {
+                showCentralNotification("ℹ️ لا يوجد رصيد تعدين لجمع", "info");
+            }
+        });
+        
+        setTimeout(() => {
+            const shareBtn = document.getElementById('shareReferralBtn');
+            if (shareBtn) shareBtn.addEventListener('click', shareReferralLink);
+        }, 100);
+        
+        async function submitWithdraw() {
+            const usernameInput = document.getElementById('tgUsername').value.trim();
+            const binanceId = document.getElementById('binanceID').value.trim();
+            const amount = WITHDRAW_AMOUNT;
+            let username = usernameInput;
+            if (username && !username.startsWith('@')) username = '@' + username;
+            
+            if (!username || username === '@') {
+                showCentralNotification("❌ يرجى إدخال اسم المستخدم", "error");
+                return;
+            }
+            if (binanceId.length < 5) {
+                showCentralNotification("❌ أدخل معرف Binance صحيح", "error");
+                return;
+            }
+            
+            if (!canWithdraw()) {
+                showCentralNotification("❌ لا يمكنك السحب الآن", "error");
+                closeModal('withdrawModal');
+                return;
+            }
+            
+            const confirmBtn = document.getElementById('confirmBtn');
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; gap: 8px;"><div class="spinner" style="width: 16px; height: 16px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>جاري الإرسال...</div>`;
+            
+            try {
+                const success = await sendWithdrawToBot(username, binanceId, amount);
+                if (success) {
+                    gameData.coins -= amount;
+                    gameData.lastWithdraw = Date.now();
+                    saveGameData();
+                    updateUI();
+                    closeModal('withdrawModal');
+                    document.getElementById('tgUsername').value = '';
+                    document.getElementById('binanceID').value = '';
+                    showCentralNotification(`🎉 تم سحب ${amount.toLocaleString()} XEC بنجاح!`, "success");
+                    tg.showAlert(`
+✅ *تم تقديم طلب سحبك بنجاح!*
+تفاصيل عملية السحب
+━━━━━━━━━━━━━━━━━━
+💰 المبلغ المسحوب: ${amount} XEC
+👤 اسم الشخص: ${username}
+💳 حساب بينانس: ${binanceId}
+━━━━━━━━━━━━━━━━━━
+⏱️ سيتم مراجعة طلبك خلال 24 ساعة`);
+                } else throw new Error("فشل الإرسال");
+            } catch (error) {
+                console.error(error);
+                tg.showAlert(`
+📝 *فشل الإرسال التلقائي*
+يرجى إرسال المعلومات يدويًا إلى @chmkhani:
+تفاصيل عملية السحب
+━━━━━━━━━━━━━━━━━━
+💰 المبلغ المسحوب: ${amount} XEC
+👤 اسم الشخص: ${username}
+💳 حساب بينانس: ${binanceId}
+━━━━━━━━━━━━━━━━━━
+⚠️ تأكد من إرسال الطلب يدويًا.`);
+                gameData.coins -= amount;
+                gameData.lastWithdraw = Date.now();
+                saveGameData();
+                updateUI();
+                closeModal('withdrawModal');
+            } finally {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = 'تأكيد السحب';
+            }
+        }
+
+        function loadReferralFromURL() {
+            if (!isTelegram) return;
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref') || urlParams.get('start');
+            if (refCode && !gameData.usedReferralCode) {
+                gameData.referralsCount++;
+                gameData.referralRewards += 1000;
+                gameData.coins += 1000;
+                gameData.usedReferralCode = true;
+                saveGameData();
+                updateUI();
+                
+                setTimeout(() => {
+                    showCentralNotification(`🎁 مرحباً بك! تم تفعيل كود الإحالة ${refCode} وحصلت على 1000 XEC`, "success");
+                    showCentralNotification("👥 ادعُ أصدقاءك الآن واحصل على المزيد!", "info");
+                }, 2000);
+            }
+        }
+
+        function disableReferralOnBrowser() {
+            if (!isTelegram) {
+                const friendsCard = document.getElementById('friendsFooterCard');
+                if (friendsCard) friendsCard.style.display = 'none';
+                const badge = document.getElementById('referralBadge');
+                if (badge) badge.style.display = 'none';
+            }
+        }
+
+        function createBubbles() {
+            const container = document.getElementById('bubblesContainer');
+            if (!container) return;
+            setInterval(() => {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 30 + 15;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.fontSize = `${size * 0.4}px`;
+                const x = Math.random() * window.innerWidth;
+                bubble.style.left = `${x}px`;
+                const duration = Math.random() * 10 + 8;
+                bubble.style.animationDuration = `${duration}s`;
+                container.appendChild(bubble);
+                setTimeout(() => bubble.remove(), duration * 1000);
+            }, 400);
+        }
+
+        function initGame() {
+            initUniqueDevicesCounter();
+            initGameData();
+            updateUniqueDevicesCounter();
+            updateUI();
+            createBubbles();
+            loadReferralFromURL();
+            disableReferralOnBrowser();
+
+            // بدء دورة التعدين كل ثانية
+            setInterval(() => {
+                updateMining();
+                updateUI(); // تحديث واجهة التعدين
+            }, 1000);
+
+            setTimeout(() => {
+                if (typeof window.show_10622687 === 'function') {
+                    window.show_10622687().then(() => {
+                        console.log('✅ تم عرض الإعلان الافتتاحي');
+                    }).catch((error) => {
+                        console.error('❌ فشل عرض الإعلان الافتتاحي:', error);
+                    });
+                } else {
+                    console.warn('⚠️ show_10622687 غير متوفر');
+                }
+            }, 2000);
+            
+            setTimeout(() => {
+                const hint = document.getElementById('hint');
+                if (hint) hint.style.opacity = '0';
+                setTimeout(() => hint.style.display = 'none', 500);
+            }, 10000);
+            
+            setTimeout(() => showCentralNotification("🎮 مرحباً بك! ابدأ بالضغط على العملة", "success"), 1500);
+            setTimeout(() => {
+                if (isTelegram) {
+                    showCentralNotification("👥 نظام الإحالة: احصل على 1,000 XEC لكل دعوة!", "info");
+                }
+            }, 3000);
+            setTimeout(() => {
+                if (!gameData.hasSubscribed) showCentralNotification("📢 اشترك في قناتنا واحصل على 1000 XEC مجانية!", "warning");
+            }, 5000);
+        }
+        
+        initGame();
+        
+        const style = document.createElement('style');
+        style.textContent = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
+        document.head.appendChild(style);
+        
+        setInterval(() => showCentralNotification("🔄 استمر في اللعب!", "info"), 30 * 60 * 1000);
+        
+        function simulateReferral() {
+            if (!isTelegram) {
+                showCentralNotification("❌ نظام الإحالة متاح فقط داخل تليجرام", "error");
+                return;
+            }
+            if (gameData.referralsCount < gameData.maxReferrals) {
+                gameData.referralsCount++;
+                gameData.referralRewards += 1000;
+                gameData.coins += 1000;
+                saveGameData();
+                showCentralNotification(`🎉 تمت إضافة دعوة جديدة! +1,000 XEC`, "success");
+                updateUI();
+            } else showCentralNotification("❌ وصلت للحد الأقصى من الدعوات (100)", "error");
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'r') { e.preventDefault(); simulateReferral(); }
+        });
+    </script>
+</body>
+</html>
