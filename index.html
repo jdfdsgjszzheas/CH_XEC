@@ -179,6 +179,26 @@
             overflow: hidden;
             padding: 5px 0;
             z-index: 5;
+            flex-direction: column;
+        }
+
+        /* اسم العملة فوق العملة */
+        .coin-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: transparent;
+            background: linear-gradient(135deg, #FBBF24, #FFD700, #FBBF24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(251, 191, 36, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(251, 191, 36, 0.8); }
         }
         
         .coin-wrapper { 
@@ -199,6 +219,9 @@
             .coin-wrapper {
                 width: 180px;
                 height: 180px;
+            }
+            .coin-title {
+                font-size: 2rem;
             }
         }
         
@@ -937,6 +960,9 @@
             </header>
 
             <main>
+                <!-- اسم العملة بشكل جميل -->
+                <div class="coin-title">XEC</div>
+                
                 <div class="hint" id="hint">✨ اضغط على العملة: كل 20 نقرة = 1 XEC</div>
                 
                 <div class="subscribe-btn" id="subscribeBtn">
@@ -1018,7 +1044,7 @@
                             <span>سحب</span>
                         </button>
                     </div>
-                    <!-- 5. تطوير (تم إلغاؤه، لكن نبقي الزر كعنصر نائي) -->
+                    <!-- 5. تطوير (مفعل الآن) -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1026,12 +1052,12 @@
                             </svg>
                             تطوير
                         </div>
-                        <div class="card-value" id="upgradeCost">-</div>
-                        <div class="card-desc">غير متاح</div>
-                        <button id="buyUpgrade" class="btn btn-upgrade" disabled>
-                            <span>معطل</span>
+                        <div class="card-value" id="upgradeCost">20</div>
+                        <div class="card-desc">تخفيض النقرات</div>
+                        <button id="buyUpgrade" class="btn btn-upgrade">
+                            <span>تطوير</span>
                         </button>
-                        <div style="font-size:0.5rem; color:#94a3b8;" id="boostRemaining">-</div>
+                        <div style="font-size:0.5rem; color:#94a3b8;" id="boostRemaining">5/5</div>
                     </div>
                 </div>
             </section>
@@ -1095,6 +1121,14 @@
                 <div class="stat-item">
                     <div class="stat-label">الدعوات</div>
                     <div class="stat-value" id="referralsStat">0/100</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">النقرات/عملة</div>
+                    <div class="stat-value" id="clicksPerCoinStat">20</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">التعزيزات</div>
+                    <div class="stat-value" id="upgradeCountStat">0</div>
                 </div>
             </div>
             <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('statsModal')">إغلاق</button>
@@ -1255,7 +1289,7 @@
 
         // ===== حفظ البيانات =====
         function getStorageKey() {
-            return `xec_game_data_v4_${getDeviceId()}`; // تغيير المفتاح لتفادي تعارض الإصدارات
+            return `xec_game_data_v5_${getDeviceId()}`; // تغيير المفتاح لتفادي تعارض الإصدارات
         }
 
         function saveGameData() {
@@ -1271,7 +1305,11 @@
                     referralsCount: gameData.referralsCount,
                     referralRewards: gameData.referralRewards,
                     usedReferralCode: gameData.usedReferralCode,
-                    hasSubscribed: gameData.hasSubscribed
+                    hasSubscribed: gameData.hasSubscribed,
+                    clicksPerCoin: gameData.clicksPerCoin,
+                    upgradeCount: gameData.upgradeCount,
+                    dailyUpgradeCount: gameData.dailyUpgradeCount,
+                    lastUpgradeReset: gameData.lastUpgradeReset
                 };
                 localStorage.setItem(key, JSON.stringify(data));
                 console.log('✅ تم حفظ البيانات', data);
@@ -1302,9 +1340,10 @@
         const MAX_ADS = 25;
         const WITHDRAW_AMOUNT = 5000;
         const COOLDOWN = 24 * 60 * 60 * 1000;
-        const CLICKS_PER_COIN = 20;  // كل 20 نقرة تعطي 1 XEC
-        const REFERRAL_BONUS = 20;    // مكافأة الإحالة 20 XEC
-        const SUBSCRIBE_BONUS = 20;   // مكافأة الاشتراك 20 XEC
+        const BASE_CLICKS_PER_COIN = 20;
+        const MAX_UPGRADES_PER_DAY = 5;
+        const REFERRAL_BONUS = 20;
+        const SUBSCRIBE_BONUS = 20;
 
         function initGameData() {
             const saved = loadGameData();
@@ -1321,7 +1360,11 @@
                     referralRewards: saved.referralRewards || 0,
                     maxReferrals: 100,
                     usedReferralCode: saved.usedReferralCode || false,
-                    hasSubscribed: saved.hasSubscribed || false
+                    hasSubscribed: saved.hasSubscribed || false,
+                    clicksPerCoin: saved.clicksPerCoin || BASE_CLICKS_PER_COIN,
+                    upgradeCount: saved.upgradeCount || 0,
+                    dailyUpgradeCount: saved.dailyUpgradeCount || 0,
+                    lastUpgradeReset: saved.lastUpgradeReset || now
                 };
                 console.log('✅ تم تهيئة البيانات من المحفوظات', gameData);
             } else {
@@ -1336,14 +1379,24 @@
                     referralRewards: 0,
                     maxReferrals: 100,
                     usedReferralCode: false,
-                    hasSubscribed: false
+                    hasSubscribed: false,
+                    clicksPerCoin: BASE_CLICKS_PER_COIN,
+                    upgradeCount: 0,
+                    dailyUpgradeCount: 0,
+                    lastUpgradeReset: now
                 };
                 console.log('🆕 تم إنشاء بيانات جديدة');
             }
 
+            // إعادة تعيين الإعلانات اليومية
             if (now - gameData.lastAdReset > COOLDOWN) {
                 gameData.adsWatched = 0;
                 gameData.lastAdReset = now;
+            }
+            // إعادة تعيين الترقيات اليومية
+            if (now - gameData.lastUpgradeReset > COOLDOWN) {
+                gameData.dailyUpgradeCount = 0;
+                gameData.lastUpgradeReset = now;
             }
         }
 
@@ -1379,6 +1432,15 @@
             return `${hours}h ${minutes}m ${seconds}s`;
         }
 
+        function getUpgradeCost() {
+            // كلما زادت الترقيات، زادت التكلفة
+            return 20 + gameData.upgradeCount * 10;
+        }
+
+        function canUpgrade() {
+            return gameData.dailyUpgradeCount < MAX_UPGRADES_PER_DAY && gameData.coins >= getUpgradeCost() && gameData.clicksPerCoin > 1;
+        }
+
         function updateWithdrawUI() {
             const withdrawBtn = document.getElementById('withdrawBtn');
             const withdrawDesc = document.getElementById('withdrawDesc');
@@ -1399,6 +1461,22 @@
             const adsStat = document.getElementById('adsWatchedStat');
             if (adsDisplay) adsDisplay.textContent = `${gameData.adsWatched}/${MAX_ADS}`;
             if (adsStat) adsStat.textContent = `${gameData.adsWatched}/${MAX_ADS}`;
+        }
+
+        function updateUpgradeUI() {
+            const upgradeBtn = document.getElementById('buyUpgrade');
+            const upgradeCost = document.getElementById('upgradeCost');
+            const boostRemaining = document.getElementById('boostRemaining');
+            
+            upgradeCost.textContent = getUpgradeCost();
+            const remaining = MAX_UPGRADES_PER_DAY - gameData.dailyUpgradeCount;
+            boostRemaining.textContent = `${remaining}/${MAX_UPGRADES_PER_DAY}`;
+            
+            if (canUpgrade()) {
+                upgradeBtn.disabled = false;
+            } else {
+                upgradeBtn.disabled = true;
+            }
         }
 
         function updateClickAbility() {
@@ -1428,10 +1506,13 @@
             
             updateWithdrawUI();
             updateAdsUI();
+            updateUpgradeUI();
             updateClickAbility();
             updateTotalDevicesDisplay();
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
+            document.getElementById('clicksPerCoinStat').textContent = gameData.clicksPerCoin;
+            document.getElementById('upgradeCountStat').textContent = gameData.upgradeCount;
             
             if (gameData.lastWithdraw === 0) {
                 document.getElementById('lastWithdraw').textContent = "لم يتم";
@@ -1655,24 +1736,44 @@
             // زيادة عداد النقرات
             gameData.totalClicks++;
             
-            // كل 20 نقرة تمنح 1 XEC
-            if (gameData.totalClicks % CLICKS_PER_COIN === 0) {
+            // كل clicksPerCoin نقرة تمنح 1 XEC
+            if (gameData.totalClicks % gameData.clicksPerCoin === 0) {
                 gameData.coins++;
-                // عرض رسالة منبثقة
-                showCentralNotification("✨ +1 XEC (20 نقرة)", "success");
+                showCentralNotification(`✨ +1 XEC (${gameData.clicksPerCoin} نقرة)`, "success");
             }
             
             saveGameData();
             
             const x = e.clientX, y = e.clientY;
             createClickEffect(x, y);
-            spawnFloatingNumber(x, y, "1"); // عرض رقم ثابت
+            spawnFloatingNumber(x, y, "1");
             updateUI();
         });
         
-        // زر التطوير معطل
+        // زر التطوير (يُفعّل الآن)
         document.getElementById('buyUpgrade').addEventListener('click', () => {
-            showCentralNotification("❌ ميزة التطوير غير متاحة حالياً", "error");
+            const cost = getUpgradeCost();
+            if (gameData.dailyUpgradeCount >= MAX_UPGRADES_PER_DAY) {
+                showCentralNotification("❌ لقد استنفدت جميع الترقيات اليومية", "error");
+                return;
+            }
+            if (gameData.coins < cost) {
+                showCentralNotification(`❌ تحتاج ${cost} XEC للترقية`, "error");
+                return;
+            }
+            if (gameData.clicksPerCoin <= 1) {
+                showCentralNotification("❌ وصلت للحد الأدنى من النقرات (1)", "error");
+                return;
+            }
+            
+            gameData.coins -= cost;
+            gameData.clicksPerCoin = Math.max(1, gameData.clicksPerCoin - 1);
+            gameData.upgradeCount++;
+            gameData.dailyUpgradeCount++;
+            saveGameData();
+            
+            showCentralNotification(`⚡ تم التطوير! الآن كل ${gameData.clicksPerCoin} نقرة = 1 XEC`, "success");
+            updateUI();
         });
         
         document.getElementById('subscribeBtn').addEventListener('click', subscribeToChannel);
@@ -1845,9 +1946,8 @@
             loadReferralFromURL();
             disableReferralOnBrowser();
 
-            // لا يوجد تعدين، لذا لا حاجة لتكرار التحديث
+            // تحديث الواجهة كل ثانية للوقت المتبقي
             setInterval(() => {
-                // فقط للتأكد من تحديث واجهة الوقت
                 updateUI();
             }, 1000);
 
@@ -1869,7 +1969,7 @@
                 setTimeout(() => hint.style.display = 'none', 500);
             }, 10000);
             
-            setTimeout(() => showCentralNotification("🎮 مرحباً بك! كل 20 نقرة = 1 XEC", "success"), 1500);
+            setTimeout(() => showCentralNotification(`🎮 مرحباً بك! كل ${gameData.clicksPerCoin} نقرة = 1 XEC`, "success"), 1500);
             setTimeout(() => {
                 if (isTelegram) {
                     showCentralNotification(`👥 نظام الإحالة: احصل على ${REFERRAL_BONUS} XEC لكل دعوة!`, "info");
