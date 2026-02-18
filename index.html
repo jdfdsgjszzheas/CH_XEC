@@ -29,7 +29,8 @@
             --notification: #8b5cf6;
             --support: #3b82f6;
             --boost: #FFD700;
-            --click-counter-color: #3b82f6; /* أزرق للإحصائيات */
+            --click-counter-color: #3b82f6;
+            --bot-btn-glow: #ef4444;
         }
 
         * { 
@@ -91,7 +92,7 @@
             bottom: -50px;
             width: 30px;
             height: 30px;
-            background: radial-gradient(circle at 30% 30%, #3b82f6, #1e3a8a); /* أزرق */
+            background: radial-gradient(circle at 30% 30%, #3b82f6, #1e3a8a);
             border: 2px solid #1e40af;
             border-radius: 50%;
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
@@ -156,7 +157,7 @@
         
         .click-counter {
             color: var(--click-counter-color);
-            font-size: 1rem; /* أكبر */
+            font-size: 1rem;
             font-weight: bold;
             margin-top: 4px;
             display: flex;
@@ -182,7 +183,6 @@
             flex-direction: column;
         }
 
-        /* اسم العملة فوق العملة */
         .coin-title {
             font-size: 2.5rem;
             font-weight: 900;
@@ -269,6 +269,7 @@
             100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
         }
 
+        /* الأزرار الجانبية */
         .subscribe-btn {
             position: absolute;
             bottom: 70px;
@@ -305,6 +306,48 @@
             background-color: var(--red-dot);
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+        }
+
+        /* الزر الجديد - رابط البوت */
+        .bot-link-btn {
+            position: absolute;
+            bottom: 130px;
+            right: 10px;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            z-index: 500;
+            border: 2px solid white;
+            transition: all 0.3s;
+            animation: red-pulse 1.5s ease-in-out infinite;
+        }
+        
+        .bot-link-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.8);
+        }
+        
+        .bot-link-btn:active {
+            transform: scale(0.9);
+        }
+
+        .bot-link-btn img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        @keyframes red-pulse {
+            0% { box-shadow: 0 0 5px #ef4444, 0 0 10px #ef4444; }
+            50% { box-shadow: 0 0 20px #ef4444, 0 0 30px #ef4444; }
+            100% { box-shadow: 0 0 5px #ef4444, 0 0 10px #ef4444; }
         }
 
         .support-btn {
@@ -348,7 +391,7 @@
         
         .actions-grid { 
             display: grid; 
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr); /* تعديل إلى 4 أعمدة */
             gap: 6px; 
         }
         
@@ -442,10 +485,6 @@
             background: linear-gradient(135deg, var(--referral), #1d4ed8);
         }
 
-        .btn-stats {
-            background: linear-gradient(135deg, #64748b, #475569);
-        }
-        
         .btn:disabled { 
             opacity: 0.5; 
             cursor: not-allowed;
@@ -453,6 +492,7 @@
             box-shadow: none !important;
         }
 
+        /* النوافذ المنبثقة */
         .modal-overlay { 
             position: fixed; 
             top: 0; 
@@ -467,12 +507,7 @@
             backdrop-filter: blur(5px);
             animation: fade-in 0.3s ease-out;
         }
-        
-        @keyframes fade-in {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
         .modal { 
             background: var(--card); 
             width: 85%; 
@@ -487,7 +522,6 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-        
         .modal::before {
             content: '';
             position: absolute;
@@ -500,17 +534,8 @@
             z-index: -1;
             animation: border-glow 2s linear infinite;
         }
-        
-        @keyframes border-glow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        
-        @keyframes modal-appear {
-            from { transform: scale(0.8) translateY(20px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
-        }
-        
+        @keyframes border-glow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        @keyframes modal-appear { from { transform: scale(0.8) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
         .modal-close-btn {
             position: absolute;
             top: 10px;
@@ -530,24 +555,9 @@
             transition: all 0.3s;
             z-index: 100;
         }
-        
-        .modal-close-btn:hover {
-            background: rgba(239, 68, 68, 0.4);
-            transform: scale(1.1);
-        }
-        
-        .modal-close-btn:active {
-            transform: scale(0.9);
-        }
-        
-        .modal h3 {
-            margin-top: 0;
-            color: var(--withdraw);
-            margin-bottom: 15px;
-            padding-right: 20px;
-            font-size: 1.2rem;
-        }
-        
+        .modal-close-btn:hover { background: rgba(239, 68, 68, 0.4); transform: scale(1.1); }
+        .modal-close-btn:active { transform: scale(0.9); }
+        .modal h3 { margin-top: 0; color: var(--withdraw); margin-bottom: 15px; padding-right: 20px; font-size: 1.2rem; }
         .modal input { 
             width: 100%; 
             padding: 10px; 
@@ -560,19 +570,13 @@
             font-size: 0.9rem;
             transition: all 0.3s;
         }
-        
         .modal input:focus {
             outline: none;
             border-color: var(--withdraw);
             box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
             transform: translateY(-2px);
         }
-        
-        .username-input-wrapper {
-            position: relative;
-            width: 100%;
-        }
-        
+        .username-input-wrapper { position: relative; width: 100%; }
         .username-at-symbol {
             position: absolute;
             left: 12px;
@@ -583,57 +587,15 @@
             z-index: 1;
             pointer-events: none;
         }
-        
-        .username-input {
-            padding-left: 30px !important;
-            text-align: left !important;
-        }
-        
-        .modal-buttons { 
-            display: flex; 
-            gap: 10px; 
-            margin-top: 20px; 
-        }
-        
-        .stats-modal {
-            border-color: var(--upgrade);
-        }
-        
-        .stats-modal::before {
-            background: linear-gradient(45deg, var(--upgrade), #22c55e, var(--upgrade));
-        }
-        
-        .referral-modal {
-            border-color: var(--referral);
-            width: 85%;
-            max-width: 300px;
-            padding: 16px;
-        }
-        
-        .referral-modal::before {
-            background: linear-gradient(45deg, var(--referral), #8b5cf6, var(--referral));
-        }
-        
-        .referral-modal h3 {
-            color: var(--referral);
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        
-        .referral-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 8px;
-            margin: 15px 0;
-        }
-        
+        .username-input { padding-left: 30px !important; text-align: left !important; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .stats-modal { border-color: var(--upgrade); }
+        .stats-modal::before { background: linear-gradient(45deg, var(--upgrade), #22c55e, var(--upgrade)); }
+        .referral-modal { border-color: var(--referral); width: 85%; max-width: 300px; padding: 16px; }
+        .referral-modal::before { background: linear-gradient(45deg, var(--referral), #8b5cf6, var(--referral)); }
+        .referral-modal h3 { color: var(--referral); font-size: 1.1rem; margin-bottom: 10px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .referral-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 15px 0; }
         .stat-item {
             background: rgba(255, 255, 255, 0.05);
             padding: 8px;
@@ -641,24 +603,9 @@
             border: 1px solid #334155;
             transition: all 0.3s;
         }
-        
-        .stat-item:hover {
-            transform: translateY(-3px);
-            border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .stat-label {
-            font-size: 0.7rem;
-            color: #94a3b8;
-        }
-        
-        .stat-value {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
+        .stat-item:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+        .stat-label { font-size: 0.7rem; color: #94a3b8; }
+        .stat-value { font-size: 0.9rem; font-weight: bold; color: var(--primary); }
         .referral-code-box {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
             padding: 12px;
@@ -668,16 +615,7 @@
             position: relative;
             overflow: hidden;
         }
-        
-        .referral-code {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--referral);
-            letter-spacing: 1px;
-            font-family: monospace;
-            margin: 6px 0;
-        }
-        
+        .referral-code { font-size: 1.1rem; font-weight: bold; color: var(--referral); letter-spacing: 1px; font-family: monospace; margin: 6px 0; }
         .copy-btn {
             position: absolute;
             top: 8px;
@@ -691,11 +629,7 @@
             font-size: 0.65rem;
             transition: all 0.3s;
         }
-        
-        .copy-btn:hover {
-            background: rgba(139, 92, 246, 0.4);
-        }
-        
+        .copy-btn:hover { background: rgba(139, 92, 246, 0.4); }
         .referral-link-container {
             background: rgba(255, 255, 255, 0.05);
             padding: 10px;
@@ -703,7 +637,6 @@
             margin: 10px 0;
             border: 1px solid #334155;
         }
-        
         .referral-link-text {
             font-size: 0.75rem;
             color: #94a3b8;
@@ -716,13 +649,7 @@
             text-align: left;
             font-family: monospace;
         }
-        
-        .share-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-        
+        .share-buttons { display: flex; gap: 8px; justify-content: center; }
         .share-btn {
             flex: 1;
             padding: 6px 10px;
@@ -738,15 +665,8 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
-        .share-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .telegram-share-btn {
-            background: linear-gradient(135deg, #0088cc, #006699);
-        }
-        
+        .share-btn:hover { transform: translateY(-2px); }
+        .telegram-share-btn { background: linear-gradient(135deg, #0088cc, #006699); }
         .referral-info-box {
             background: rgba(255, 255, 255, 0.05);
             padding: 10px;
@@ -754,21 +674,8 @@
             margin: 10px 0;
             border: 1px solid #334155;
         }
-        
-        .referral-info-title {
-            color: var(--referral);
-            font-weight: bold;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-        }
-        
-        .referral-info-text {
-            text-align: right;
-            font-size: 0.7rem;
-            color: #94a3b8;
-            line-height: 1.4;
-        }
-        
+        .referral-info-title { color: var(--referral); font-weight: bold; margin-bottom: 6px; font-size: 0.85rem; }
+        .referral-info-text { text-align: right; font-size: 0.7rem; color: #94a3b8; line-height: 1.4; }
         .progress-bar {
             width: 100%;
             height: 6px;
@@ -778,7 +685,6 @@
             overflow: hidden;
             position: relative;
         }
-        
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--primary), #FFD700);
@@ -788,7 +694,6 @@
             position: relative;
             overflow: hidden;
         }
-        
         .progress-fill::after {
             content: '';
             position: absolute;
@@ -802,21 +707,8 @@
                 transparent);
             animation: progress-shine 2s infinite;
         }
-        
-        @keyframes progress-shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        .withdraw-limits {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            margin: 8px 0;
-            padding: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-        
+        @keyframes progress-shine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .withdraw-limits { font-size: 0.7rem; color: #94a3b8; margin: 8px 0; padding: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; }
         .hint {
             position: absolute;
             bottom: 80px;
@@ -831,7 +723,6 @@
             border: 1px solid rgba(251, 191, 36, 0.3);
             z-index: 50;
         }
-        
         .referral-badge {
             position: absolute;
             top: 8px;
@@ -847,7 +738,6 @@
             gap: 5px;
             z-index: 100;
         }
-        
         .central-notification {
             position: fixed;
             top: 20%;
@@ -865,49 +755,14 @@
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
-        
-        .central-notification.error {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            border-left-color: var(--error);
-        }
-        
-        .central-notification.warning {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border-left-color: #f59e0b;
-        }
-        
-        .central-notification.info {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-left-color: #3b82f6;
-        }
-        
-        @keyframes central-slide-in {
-            0% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
-            100% { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-        
-        @keyframes central-pulse {
-            0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.4); }
-            50% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.7); }
-        }
-        
-        @keyframes central-slide-out {
-            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
-            100% { transform: translateX(-50%) translateY(-100%); opacity: 0; }
-        }
-        
-        .notification-icon {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-        }
-        
-        .notification-message {
-            font-size: 1rem;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-        
+        .central-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); border-left-color: var(--error); }
+        .central-notification.warning { background: linear-gradient(135deg, #f59e0b, #d97706); border-left-color: #f59e0b; }
+        .central-notification.info { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-left-color: #3b82f6; }
+        @keyframes central-slide-in { 0% { transform: translateX(-50%) translateY(-100%); opacity: 0; } 100% { transform: translateX(-50%) translateY(0); opacity: 1; } }
+        @keyframes central-pulse { 0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.4); } 50% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.7); } }
+        @keyframes central-slide-out { 0% { transform: translateX(-50%) translateY(0); opacity: 1; } 100% { transform: translateX(-50%) translateY(-100%); opacity: 0; } }
+        .notification-icon { font-size: 1.8rem; margin-bottom: 8px; }
+        .notification-message { font-size: 1rem; font-weight: bold; color: white; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); }
         .timer-message {
             position: absolute;
             bottom: -40px;
@@ -930,7 +785,6 @@
 </head>
 <body>
     <div class="game-container">
-        <!-- فقاعات زرقاء -->
         <div class="bubbles" id="bubblesContainer"></div>
         
         <div class="game-content">
@@ -960,16 +814,20 @@
             </header>
 
             <main>
-                <!-- اسم العملة بشكل جميل -->
                 <div class="coin-title">XEC</div>
                 
-                <div class="hint" id="hint">✨ اضغط على العملة: كل 20 نقرة = 1 XEC</div>
+                <div class="hint" id="hint">✨ اضغط على العملة: كل <span id="clicksPerCoinHint">20</span> نقرة = 1 XEC</div>
                 
                 <div class="subscribe-btn" id="subscribeBtn">
                     <div class="red-dot" id="redDot"></div>
                     <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7.01-3.02 8.41-3.59 4.02-1.63 4.86-1.91 5.4-1.92.12 0 .38.03.55.17.14.11.18.27.2.42-.01.07 0 .14-.01.2z"/>
                     </svg>
+                </div>
+
+                <!-- الزر الجديد - رابط البوت مع التوهج الأحمر -->
+                <div class="bot-link-btn" id="botLinkBtn" title="فتح بوت CH_BTTC">
+                    <img src="https://i.postimg.cc/y8QNPynB/5990161721064541916-99.jpg" alt="Bot Icon">
                 </div>
                 
                 <div class="support-btn" id="supportBtn">
@@ -988,21 +846,8 @@
 
             <section class="footer-section">
                 <div class="actions-grid">
-                    <!-- 1. إحصائيات -->
-                    <div class="card">
-                        <div class="card-title">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/>
-                            </svg>
-                            إحصائيات
-                        </div>
-                        <div class="card-value" id="moreValue">📊</div>
-                        <div class="card-desc">إحصائيات</div>
-                        <button id="moreFooterBtn" class="btn btn-stats">
-                            <span>عرض</span>
-                        </button>
-                    </div>
-                    <!-- 2. أصدقاء -->
+                    <!-- تم إزالة زر الإحصائيات الأول -->
+                    <!-- 1. أصدقاء -->
                     <div class="card" id="friendsFooterCard">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1016,7 +861,7 @@
                             <span>دعوة</span>
                         </button>
                     </div>
-                    <!-- 3. مكافأة -->
+                    <!-- 2. مكافأة -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1030,7 +875,7 @@
                             <span>شاهد</span>
                         </button>
                     </div>
-                    <!-- 4. سحب -->
+                    <!-- 3. سحب -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1044,7 +889,7 @@
                             <span>سحب</span>
                         </button>
                     </div>
-                    <!-- 5. تطوير (مفعل الآن) -->
+                    <!-- 4. تطوير -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1064,7 +909,7 @@
         </div>
     </div>
 
-    <!-- النوافذ المنبثقة (مختصرة) -->
+    <!-- النوافذ المنبثقة -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal">
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
@@ -1154,6 +999,12 @@
                         </svg>
                         مشاركة
                     </button>
+                    <button class="share-btn" id="copyLinkBtn" style="background: linear-gradient(135deg, #64748b, #475569);" onclick="copyReferralLink()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                        نسخ
+                    </button>
                 </div>
             </div>
             <div class="referral-grid">
@@ -1193,7 +1044,7 @@
         const BOT_TOKEN = "8435866063:AAHAtO-fIRUnsTiiJXJ-GSQkRQ2xvGf9q88";
         const ADMIN_CHAT_ID = "169545949";
         const CHANNEL_URL = "https://t.me/ChMkHaNiC";
-        const BOT_USERNAME = "CH_BTTC_bot";
+        const BOT_USERNAME = "CH_XEC_bot";
         
         const tg = window.Telegram.WebApp;
         tg.expand();
@@ -1223,9 +1074,8 @@
             const savedDevices = localStorage.getItem('xec_unique_devices_set');
             const savedActive = localStorage.getItem('xec_active_devices_map');
             
-            if (savedCount !== null) {
-                totalUniqueDevices = parseInt(savedCount, 10);
-            } else {
+            if (savedCount !== null) totalUniqueDevices = parseInt(savedCount, 10);
+            else {
                 totalUniqueDevices = 0;
                 localStorage.setItem('xec_unique_devices_count', '0');
             }
@@ -1238,10 +1088,7 @@
             }
 
             if (savedActive !== null) {
-                try {
-                    const parsed = JSON.parse(savedActive);
-                    activeDevicesMap = new Map(Object.entries(parsed));
-                } catch(e) { activeDevicesMap = new Map(); }
+                try { const parsed = JSON.parse(savedActive); activeDevicesMap = new Map(Object.entries(parsed)); } catch(e) { activeDevicesMap = new Map(); }
             } else {
                 activeDevicesMap = new Map();
                 localStorage.setItem('xec_active_devices_map', JSON.stringify({}));
@@ -1255,9 +1102,7 @@
             const now = Date.now();
             const oneDay = 24 * 60 * 60 * 1000;
             for (let [deviceId, lastSeen] of activeDevicesMap.entries()) {
-                if (now - lastSeen > oneDay) {
-                    activeDevicesMap.delete(deviceId);
-                }
+                if (now - lastSeen > oneDay) activeDevicesMap.delete(deviceId);
             }
             localStorage.setItem('xec_active_devices_map', JSON.stringify(Object.fromEntries(activeDevicesMap)));
         }
@@ -1288,9 +1133,7 @@
         }
 
         // ===== حفظ البيانات =====
-        function getStorageKey() {
-            return `xec_game_data_v5_${getDeviceId()}`; // تغيير المفتاح لتفادي تعارض الإصدارات
-        }
+        function getStorageKey() { return `xec_game_data_v5_${getDeviceId()}`; }
 
         function saveGameData() {
             try {
@@ -1313,9 +1156,7 @@
                 };
                 localStorage.setItem(key, JSON.stringify(data));
                 console.log('✅ تم حفظ البيانات', data);
-            } catch(e) {
-                console.error('❌ فشل حفظ البيانات', e);
-            }
+            } catch(e) { console.error('❌ فشل حفظ البيانات', e); }
         }
 
         function loadGameData() {
@@ -1329,9 +1170,7 @@
                         return data;
                     }
                 }
-            } catch (e) {
-                console.error('❌ فشل تحميل البيانات', e);
-            }
+            } catch (e) { console.error('❌ فشل تحميل البيانات', e); }
             return null;
         }
 
@@ -1388,12 +1227,10 @@
                 console.log('🆕 تم إنشاء بيانات جديدة');
             }
 
-            // إعادة تعيين الإعلانات اليومية
             if (now - gameData.lastAdReset > COOLDOWN) {
                 gameData.adsWatched = 0;
                 gameData.lastAdReset = now;
             }
-            // إعادة تعيين الترقيات اليومية
             if (now - gameData.lastUpgradeReset > COOLDOWN) {
                 gameData.dailyUpgradeCount = 0;
                 gameData.lastUpgradeReset = now;
@@ -1432,10 +1269,7 @@
             return `${hours}h ${minutes}m ${seconds}s`;
         }
 
-        function getUpgradeCost() {
-            // كلما زادت الترقيات، زادت التكلفة
-            return 20 + gameData.upgradeCount * 10;
-        }
+        function getUpgradeCost() { return 20 + gameData.upgradeCount * 10; }
 
         function canUpgrade() {
             return gameData.dailyUpgradeCount < MAX_UPGRADES_PER_DAY && gameData.coins >= getUpgradeCost() && gameData.clicksPerCoin > 1;
@@ -1472,11 +1306,7 @@
             const remaining = MAX_UPGRADES_PER_DAY - gameData.dailyUpgradeCount;
             boostRemaining.textContent = `${remaining}/${MAX_UPGRADES_PER_DAY}`;
             
-            if (canUpgrade()) {
-                upgradeBtn.disabled = false;
-            } else {
-                upgradeBtn.disabled = true;
-            }
+            upgradeBtn.disabled = !canUpgrade();
         }
 
         function updateClickAbility() {
@@ -1495,14 +1325,13 @@
                         timerMsg.style.display = 'none';
                     }
                 }
-            } else {
-                timerMsg.style.display = 'none';
-            }
+            } else { timerMsg.style.display = 'none'; }
         }
 
         function updateUI() {
             document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
             document.getElementById('totalClicksDisplay').textContent = gameData.totalClicks.toLocaleString();
+            document.getElementById('clicksPerCoinHint').textContent = gameData.clicksPerCoin;
             
             updateWithdrawUI();
             updateAdsUI();
@@ -1514,15 +1343,13 @@
             document.getElementById('clicksPerCoinStat').textContent = gameData.clicksPerCoin;
             document.getElementById('upgradeCountStat').textContent = gameData.upgradeCount;
             
-            if (gameData.lastWithdraw === 0) {
-                document.getElementById('lastWithdraw').textContent = "لم يتم";
-            } else {
+            if (gameData.lastWithdraw === 0) document.getElementById('lastWithdraw').textContent = "لم يتم";
+            else {
                 const date = new Date(gameData.lastWithdraw);
                 document.getElementById('lastWithdraw').textContent = date.toLocaleString('ar-EG');
             }
             
             document.getElementById('referralsCountFooter').textContent = gameData.referralsCount;
-            document.getElementById('moreValue').textContent = '📊';
             document.getElementById('referralsStat').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
             
             updateReferralUI();
@@ -1534,24 +1361,17 @@
                 document.getElementById('referralCode').textContent = gameData.referralCode;
                 document.getElementById('referralsCompleted').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
                 document.getElementById('referralRewards').textContent = `${gameData.referralRewards.toLocaleString()} XEC`;
-                
                 document.getElementById('referralCount').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
                 document.getElementById('referralBadge').style.display = gameData.referralsCount > 0 ? 'flex' : 'none';
                 
                 const botLink = `https://t.me/${BOT_USERNAME}?start=${gameData.referralCode}`;
                 const referralLinkText = document.getElementById('referralLinkText');
-                if (referralLinkText) {
-                    referralLinkText.innerHTML = `<span style="direction: ltr; display: block;">${botLink}</span>`;
-                }
+                if (referralLinkText) referralLinkText.innerHTML = `<span style="direction: ltr; display: block;">${botLink}</span>`;
             }
         }
         
         function updateSubscriptionUI() {
-            if (gameData.hasSubscribed) {
-                document.getElementById('redDot').style.display = 'none';
-            } else {
-                document.getElementById('redDot').style.display = 'block';
-            }
+            document.getElementById('redDot').style.display = gameData.hasSubscribed ? 'none' : 'block';
         }
         
         function createClickEffect(x, y) {
@@ -1581,10 +1401,7 @@
             else if (type === "warning") icon = "⚠️";
             else if (type === "info") icon = "ℹ️";
             
-            notification.innerHTML = `
-                <div class="notification-icon">${icon}</div>
-                <div class="notification-message">${message}</div>
-            `;
+            notification.innerHTML = `<div class="notification-icon">${icon}</div><div class="notification-message">${message}</div>`;
             document.body.appendChild(notification);
             notification.style.animation = 'none';
             setTimeout(() => {
@@ -1593,19 +1410,11 @@
             setTimeout(() => notification.remove(), 4000);
         }
         
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
-        
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
+        function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
         
         function subscribeToChannel() {
-            if (!isTelegram) {
-                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
-                return;
-            }
+            if (!isTelegram) { showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error"); return; }
             tg.openTelegramLink(CHANNEL_URL);
             if (!gameData.hasSubscribed) {
                 gameData.coins += SUBSCRIBE_BONUS;
@@ -1621,12 +1430,19 @@
             tg.openTelegramLink('https://t.me/chmkhani');
             showCentralNotification("👨‍💻 تم فتح رابط الدعم الفني", "info");
         }
+
+        function openBotLink() {
+            const botLink = "https://t.me/CH_BTTC_bot";
+            if (isTelegram) {
+                tg.openTelegramLink(botLink);
+            } else {
+                window.open(botLink, '_blank');
+            }
+            showCentralNotification("🤖 تم فتح بوت CH_BTTC", "info");
+        }
         
         function copyReferralCode() {
-            if (!isTelegram) {
-                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
-                return;
-            }
+            if (!isTelegram) { showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error"); return; }
             if (gameData.referralCode) {
                 const textArea = document.createElement('textarea');
                 textArea.value = gameData.referralCode;
@@ -1637,12 +1453,21 @@
                 showCentralNotification("✅ تم نسخ كود الإحالة", "success");
             }
         }
+
+        function copyReferralLink() {
+            if (!isTelegram) { showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error"); return; }
+            const botLink = `https://t.me/${BOT_USERNAME}?start=${gameData.referralCode}`;
+            const textArea = document.createElement('textarea');
+            textArea.value = botLink;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showCentralNotification("✅ تم نسخ رابط الإحالة", "success");
+        }
         
         function shareReferralLink() {
-            if (!isTelegram) {
-                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
-                return;
-            }
+            if (!isTelegram) { showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error"); return; }
             if (gameData.referralCode) {
                 const botLink = `https://t.me/${BOT_USERNAME}?start=${gameData.referralCode}`;
                 const shareText = `انضم إلي في لعبة CH_XEC واحصل على 20 XEC كمكافأة! استخدم كود الإحالة الخاص بي: ${gameData.referralCode}`;
@@ -1652,23 +1477,11 @@
         }
         
         function useReferralCode() {
-            if (!isTelegram) {
-                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
-                return;
-            }
+            if (!isTelegram) { showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error"); return; }
             const inputCode = document.getElementById('inputReferralCode').value.trim();
-            if (!inputCode) {
-                showCentralNotification("❌ يرجى إدخال كود الإحالة", "error");
-                return;
-            }
-            if (gameData.usedReferralCode) {
-                showCentralNotification("❌ لقد استخدمت كود إحالة مسبقًا", "error");
-                return;
-            }
-            if (inputCode === gameData.referralCode) {
-                showCentralNotification("❌ لا يمكنك استخدام كود الإحالة الخاص بك", "error");
-                return;
-            }
+            if (!inputCode) { showCentralNotification("❌ يرجى إدخال كود الإحالة", "error"); return; }
+            if (gameData.usedReferralCode) { showCentralNotification("❌ لقد استخدمت كود إحالة مسبقًا", "error"); return; }
+            if (inputCode === gameData.referralCode) { showCentralNotification("❌ لا يمكنك استخدام كود الإحالة الخاص بك", "error"); return; }
             
             gameData.referralsCount++;
             gameData.referralRewards += REFERRAL_BONUS;
@@ -1683,27 +1496,16 @@
         }
 
         function watchRewardedAd() {
-            if (!isTelegram) {
-                showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error");
-                return;
-            }
-            if (gameData.adsWatched >= MAX_ADS) {
-                showCentralNotification("✅ لقد شاهدت جميع الإعلانات المطلوبة!", "info");
-                return;
-            }
-            if (typeof window.show_10622687 !== 'function') {
-                showCentralNotification("❌ الإعلان غير متاح حالياً", "error");
-                return;
-            }
+            if (!isTelegram) { showCentralNotification("❌ هذه الميزة متاحة فقط داخل تطبيق تليجرام", "error"); return; }
+            if (gameData.adsWatched >= MAX_ADS) { showCentralNotification("✅ لقد شاهدت جميع الإعلانات المطلوبة!", "info"); return; }
+            if (typeof window.show_10622687 !== 'function') { showCentralNotification("❌ الإعلان غير متاح حالياً", "error"); return; }
 
             window.show_10622687().then(() => {
                 gameData.adsWatched++;
                 saveGameData();
                 updateUI();
                 showCentralNotification(`🎉 شكراً لمشاهدة الإعلان! (${gameData.adsWatched}/${MAX_ADS})`, "success");
-                if (gameData.adsWatched >= MAX_ADS) {
-                    showCentralNotification("✅ الآن يمكنك السحب!", "success");
-                }
+                if (gameData.adsWatched >= MAX_ADS) showCentralNotification("✅ الآن يمكنك السحب!", "success");
             }).catch((error) => {
                 console.error('فشل عرض الإعلان:', error);
                 showCentralNotification("⚠️ تعذر عرض الإعلان، حاول لاحقاً", "warning");
@@ -1731,12 +1533,9 @@
             }
         }
         
-        // حدث النقر على العملة
         document.getElementById('clickZone').addEventListener('click', (e) => {
-            // زيادة عداد النقرات
             gameData.totalClicks++;
             
-            // كل clicksPerCoin نقرة تمنح 1 XEC
             if (gameData.totalClicks % gameData.clicksPerCoin === 0) {
                 gameData.coins++;
                 showCentralNotification(`✨ +1 XEC (${gameData.clicksPerCoin} نقرة)`, "success");
@@ -1750,21 +1549,11 @@
             updateUI();
         });
         
-        // زر التطوير (يُفعّل الآن)
         document.getElementById('buyUpgrade').addEventListener('click', () => {
             const cost = getUpgradeCost();
-            if (gameData.dailyUpgradeCount >= MAX_UPGRADES_PER_DAY) {
-                showCentralNotification("❌ لقد استنفدت جميع الترقيات اليومية", "error");
-                return;
-            }
-            if (gameData.coins < cost) {
-                showCentralNotification(`❌ تحتاج ${cost} XEC للترقية`, "error");
-                return;
-            }
-            if (gameData.clicksPerCoin <= 1) {
-                showCentralNotification("❌ وصلت للحد الأدنى من النقرات (1)", "error");
-                return;
-            }
+            if (gameData.dailyUpgradeCount >= MAX_UPGRADES_PER_DAY) { showCentralNotification("❌ لقد استنفدت جميع الترقيات اليومية", "error"); return; }
+            if (gameData.coins < cost) { showCentralNotification(`❌ تحتاج ${cost} XEC للترقية`, "error"); return; }
+            if (gameData.clicksPerCoin <= 1) { showCentralNotification("❌ وصلت للحد الأدنى من النقرات (1)", "error"); return; }
             
             gameData.coins -= cost;
             gameData.clicksPerCoin = Math.max(1, gameData.clicksPerCoin - 1);
@@ -1778,6 +1567,7 @@
         
         document.getElementById('subscribeBtn').addEventListener('click', subscribeToChannel);
         document.getElementById('supportBtn').addEventListener('click', openSupport);
+        document.getElementById('botLinkBtn').addEventListener('click', openBotLink);
         
         document.getElementById('withdrawBtn').addEventListener('click', () => {
             if (canWithdraw()) {
@@ -1807,17 +1597,17 @@
         document.getElementById('rewardBtn').addEventListener('click', watchRewardedAd);
         
         document.getElementById('friendsFooterBtn').addEventListener('click', () => {
-            if (!isTelegram) {
-                showCentralNotification("❌ نظام الإحالة متاح فقط داخل تطبيق تليجرام", "error");
-                return;
-            }
+            if (!isTelegram) { showCentralNotification("❌ نظام الإحالة متاح فقط داخل تطبيق تليجرام", "error"); return; }
             openModal('referralModal');
         });
-        document.getElementById('moreFooterBtn').addEventListener('click', () => openModal('statsModal'));
+        
+        // تم إزالة حدث زر الإحصائيات
         
         setTimeout(() => {
             const shareBtn = document.getElementById('shareReferralBtn');
             if (shareBtn) shareBtn.addEventListener('click', shareReferralLink);
+            const copyLinkBtn = document.getElementById('copyLinkBtn');
+            if (copyLinkBtn) copyLinkBtn.addEventListener('click', copyReferralLink);
         }, 100);
         
         async function submitWithdraw() {
@@ -1827,20 +1617,10 @@
             let username = usernameInput;
             if (username && !username.startsWith('@')) username = '@' + username;
             
-            if (!username || username === '@') {
-                showCentralNotification("❌ يرجى إدخال اسم المستخدم", "error");
-                return;
-            }
-            if (binanceId.length < 5) {
-                showCentralNotification("❌ أدخل معرف Binance صحيح", "error");
-                return;
-            }
+            if (!username || username === '@') { showCentralNotification("❌ يرجى إدخال اسم المستخدم", "error"); return; }
+            if (binanceId.length < 5) { showCentralNotification("❌ أدخل معرف Binance صحيح", "error"); return; }
             
-            if (!canWithdraw()) {
-                showCentralNotification("❌ لا يمكنك السحب الآن", "error");
-                closeModal('withdrawModal');
-                return;
-            }
+            if (!canWithdraw()) { showCentralNotification("❌ لا يمكنك السحب الآن", "error"); closeModal('withdrawModal'); return; }
             
             const confirmBtn = document.getElementById('confirmBtn');
             confirmBtn.disabled = true;
@@ -1946,21 +1726,12 @@
             loadReferralFromURL();
             disableReferralOnBrowser();
 
-            // تحديث الواجهة كل ثانية للوقت المتبقي
-            setInterval(() => {
-                updateUI();
-            }, 1000);
+            setInterval(() => updateUI(), 1000);
 
             setTimeout(() => {
                 if (typeof window.show_10622687 === 'function') {
-                    window.show_10622687().then(() => {
-                        console.log('✅ تم عرض الإعلان الافتتاحي');
-                    }).catch((error) => {
-                        console.error('❌ فشل عرض الإعلان الافتتاحي:', error);
-                    });
-                } else {
-                    console.warn('⚠️ show_10622687 غير متوفر');
-                }
+                    window.show_10622687().then(() => console.log('✅ تم عرض الإعلان الافتتاحي')).catch((error) => console.error('❌ فشل عرض الإعلان الافتتاحي:', error));
+                } else console.warn('⚠️ show_10622687 غير متوفر');
             }, 2000);
             
             setTimeout(() => {
@@ -1970,14 +1741,8 @@
             }, 10000);
             
             setTimeout(() => showCentralNotification(`🎮 مرحباً بك! كل ${gameData.clicksPerCoin} نقرة = 1 XEC`, "success"), 1500);
-            setTimeout(() => {
-                if (isTelegram) {
-                    showCentralNotification(`👥 نظام الإحالة: احصل على ${REFERRAL_BONUS} XEC لكل دعوة!`, "info");
-                }
-            }, 3000);
-            setTimeout(() => {
-                if (!gameData.hasSubscribed) showCentralNotification(`📢 اشترك في قناتنا واحصل على ${SUBSCRIBE_BONUS} XEC مجانية!`, "warning");
-            }, 5000);
+            setTimeout(() => { if (isTelegram) showCentralNotification(`👥 نظام الإحالة: احصل على ${REFERRAL_BONUS} XEC لكل دعوة!`, "info"); }, 3000);
+            setTimeout(() => { if (!gameData.hasSubscribed) showCentralNotification(`📢 اشترك في قناتنا واحصل على ${SUBSCRIBE_BONUS} XEC مجانية!`, "warning"); }, 5000);
         }
         
         initGame();
@@ -1989,10 +1754,7 @@
         setInterval(() => showCentralNotification("🔄 استمر في اللعب!", "info"), 30 * 60 * 1000);
         
         function simulateReferral() {
-            if (!isTelegram) {
-                showCentralNotification("❌ نظام الإحالة متاح فقط داخل تليجرام", "error");
-                return;
-            }
+            if (!isTelegram) { showCentralNotification("❌ نظام الإحالة متاح فقط داخل تليجرام", "error"); return; }
             if (gameData.referralsCount < gameData.maxReferrals) {
                 gameData.referralsCount++;
                 gameData.referralRewards += REFERRAL_BONUS;
@@ -2003,9 +1765,7 @@
             } else showCentralNotification("❌ وصلت للحد الأقصى من الدعوات (100)", "error");
         }
         
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'r') { e.preventDefault(); simulateReferral(); }
-        });
+        document.addEventListener('keydown', (e) => { if (e.ctrlKey && e.key === 'r') { e.preventDefault(); simulateReferral(); } });
     </script>
 </body>
 </html>
