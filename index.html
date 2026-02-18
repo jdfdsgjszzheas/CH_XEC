@@ -12,12 +12,12 @@
 
     <style>
         :root {
-            --primary: #FBBF24;        /* اللون الذهبي بدلاً من الأزرق */
+            --primary: #FBBF24;
             --bg: #0b0f1a;
             --card: #161b2a;
             --text-main: #ffffff;
             --upgrade: #22c55e;
-            --withdraw: #FBBF24;        /* تغيير لون السحب للذهبي */
+            --withdraw: #FBBF24;
             --reward: #8b5cf6;
             --referral: #3b82f6;
             --stats: #94a3b8;
@@ -29,6 +29,7 @@
             --notification: #8b5cf6;
             --support: #3b82f6;
             --boost: #FFD700;
+            --click-counter-color: #3b82f6; /* أزرق للإحصائيات */
         }
 
         * { 
@@ -90,10 +91,10 @@
             bottom: -50px;
             width: 30px;
             height: 30px;
-            background: radial-gradient(circle at 30% 30%, #FFD700, #B8860B);
-            border: 2px solid #DAA520;
+            background: radial-gradient(circle at 30% 30%, #3b82f6, #1e3a8a); /* أزرق */
+            border: 2px solid #1e40af;
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
             animation: bubble-float linear infinite;
             display: flex;
             align-items: center;
@@ -153,57 +154,19 @@
             line-height: 1.2;
         }
         
-        .power-display {
-            color: var(--upgrade);
-            font-size: 0.7rem;
-            margin-top: 2px;
+        .click-counter {
+            color: var(--click-counter-color);
+            font-size: 1rem; /* أكبر */
+            font-weight: bold;
+            margin-top: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 5px;
-        }
-
-        /* قسم التعدين الجديد */
-        .mining-section {
-            background: rgba(0,0,0,0.3);
+            background: rgba(59, 130, 246, 0.1);
+            padding: 4px 8px;
             border-radius: 20px;
-            padding: 6px 12px;
-            margin: 6px 0 2px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid var(--primary);
-            box-shadow: 0 0 10px rgba(251,191,36,0.2);
-        }
-        .mining-info {
-            display: flex;
-            flex-direction: column;
-            font-size: 0.7rem;
-        }
-        .mining-label {
-            color: #94a3b8;
-        }
-        .mining-value {
-            color: var(--primary);
-            font-weight: bold;
-        }
-        .mining-collect-btn {
-            background: linear-gradient(135deg, var(--primary), #B8860B);
-            border: none;
-            color: black;
-            font-weight: bold;
-            border-radius: 30px;
-            padding: 6px 12px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        .mining-collect-btn:hover {
-            transform: scale(1.05);
-        }
-        .mining-collect-btn:active {
-            transform: scale(0.95);
+            border: 1px solid var(--click-counter-color);
         }
         
         main { 
@@ -944,7 +907,7 @@
 </head>
 <body>
     <div class="game-container">
-        <!-- فقاعات -->
+        <!-- فقاعات زرقاء -->
         <div class="bubbles" id="bubblesContainer"></div>
         
         <div class="game-content">
@@ -954,28 +917,15 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
-                        رصيدك الحالي
+                        رصيدك القابل للسحب
                     </div>
                     <div id="balance" class="balance-amount">0</div>
-                    <div class="power-display">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <div class="click-counter">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M7 10l5 5 5-5z"/>
                         </svg>
-                        قوة النقر: <span id="clickPower">1</span>
+                        النقرات التراكمية: <span id="totalClicksDisplay">0</span>
                     </div>
-                </div>
-
-                <!-- قسم التعدين الجديد -->
-                <div class="mining-section" id="miningSection">
-                    <div class="mining-info">
-                        <span class="mining-label">⛏️ التعدين</span>
-                        <span class="mining-value" id="miningRate">0.1/sec</span>
-                    </div>
-                    <div class="mining-info">
-                        <span class="mining-label">⛏️ غير مجمّع</span>
-                        <span class="mining-value" id="miningBalance">0</span>
-                    </div>
-                    <button class="mining-collect-btn" id="collectMiningBtn">جمع</button>
                 </div>
                 
                 <div class="referral-badge" id="referralBadge" style="display: none;">
@@ -987,9 +937,8 @@
             </header>
 
             <main>
-                <div class="hint" id="hint">✨ اضغط على العملة لجمع XEC</div>
+                <div class="hint" id="hint">✨ اضغط على العملة: كل 20 نقرة = 1 XEC</div>
                 
-                <!-- الأزرار الجانبية -->
                 <div class="subscribe-btn" id="subscribeBtn">
                     <div class="red-dot" id="redDot"></div>
                     <svg viewBox="0 0 24 24" fill="white" width="24" height="24">
@@ -1011,7 +960,6 @@
                 </div>
             </main>
 
-            <!-- الفوتر – 5 أزرار -->
             <section class="footer-section">
                 <div class="actions-grid">
                     <!-- 1. إحصائيات -->
@@ -1037,7 +985,7 @@
                             أصدقاء
                         </div>
                         <div class="card-value" id="referralsCountFooter">0</div>
-                        <div class="card-desc">+1000</div>
+                        <div class="card-desc">+20</div>
                         <button id="friendsFooterBtn" class="btn btn-referral">
                             <span>دعوة</span>
                         </button>
@@ -1070,7 +1018,7 @@
                             <span>سحب</span>
                         </button>
                     </div>
-                    <!-- 5. تطوير -->
+                    <!-- 5. تطوير (تم إلغاؤه، لكن نبقي الزر كعنصر نائي) -->
                     <div class="card">
                         <div class="card-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1078,19 +1026,19 @@
                             </svg>
                             تطوير
                         </div>
-                        <div class="card-value" id="upgradeCost">20</div>
-                        <div class="card-desc">قوة النقر</div>
-                        <button id="buyUpgrade" class="btn btn-upgrade">
-                            <span>شراء</span>
+                        <div class="card-value" id="upgradeCost">-</div>
+                        <div class="card-desc">غير متاح</div>
+                        <button id="buyUpgrade" class="btn btn-upgrade" disabled>
+                            <span>معطل</span>
                         </button>
-                        <div style="font-size:0.5rem; color:#94a3b8;" id="boostRemaining">5/5</div>
+                        <div style="font-size:0.5rem; color:#94a3b8;" id="boostRemaining">-</div>
                     </div>
                 </div>
             </section>
         </div>
     </div>
 
-    <!-- النوافذ المنبثقة -->
+    <!-- النوافذ المنبثقة (مختصرة) -->
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal">
             <div class="modal-close-btn" onclick="closeModal('withdrawModal')">×</div>
@@ -1125,16 +1073,8 @@
             <h3>📊 إحصائيات البوت</h3>
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-label">النقرات في الجلسة</div>
+                    <div class="stat-label">النقرات التراكمية</div>
                     <div class="stat-value" id="totalClicks">0</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">قوة النقر الحالية</div>
-                    <div class="stat-value" id="currentPower">1</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">الترقيات المشتراة</div>
-                    <div class="stat-value" id="upgradesBought">0</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">آخر سحب</div>
@@ -1153,8 +1093,8 @@
                     <div class="stat-value" id="adsWatchedStat">0/25</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">التعزيزات اليوم</div>
-                    <div class="stat-value" id="boostsUsedStat">0/5</div>
+                    <div class="stat-label">الدعوات</div>
+                    <div class="stat-value" id="referralsStat">0/100</div>
                 </div>
             </div>
             <button class="btn" style="background: linear-gradient(135deg, #475569, #334155);" onclick="closeModal('statsModal')">إغلاق</button>
@@ -1193,14 +1133,14 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">مكافأة الدعوة</div>
-                    <div class="stat-value">1,000 XEC</div>
+                    <div class="stat-value">20 XEC</div>
                 </div>
             </div>
             <div class="referral-info-box">
                 <div class="referral-info-title">🎯 كيف تعمل الإحالة:</div>
                 <div class="referral-info-text">
                     1. شارك رابط البوت الخاص بك مع أصدقائك<br>
-                    2. عندما ينضم صديق عبر الرابط، تحصل على 1,000 XEC<br>
+                    2. عندما ينضم صديق عبر الرابط، تحصل على 20 XEC<br>
                     3. الحد الأقصى: 100 دعوة<br>
                     4. المكافأة تضاف إلى رصيدك
                 </div>
@@ -1215,11 +1155,11 @@
     </div>
 
     <script>
-        // 🔧 إعدادات البوت
+        // إعدادات البوت
         const BOT_TOKEN = "8435866063:AAHAtO-fIRUnsTiiJXJ-GSQkRQ2xvGf9q88";
         const ADMIN_CHAT_ID = "169545949";
         const CHANNEL_URL = "https://t.me/ChMkHaNiC";
-        const BOT_USERNAME = "CH_BTTC_bot";  // يمكن تغييره لاحقاً
+        const BOT_USERNAME = "CH_BTTC_bot";
         
         const tg = window.Telegram.WebApp;
         tg.expand();
@@ -1229,7 +1169,7 @@
 
         const isTelegram = window.Telegram?.WebApp?.initData !== '' && window.Telegram?.WebApp?.initData !== undefined;
 
-        // ===== نظام معرف الجهاز الفريد =====
+        // ===== نظام معرف الجهاز =====
         function getDeviceId() {
             let deviceId = localStorage.getItem('xec_device_id');
             if (!deviceId) {
@@ -1239,7 +1179,7 @@
             return deviceId;
         }
 
-        // ===== عداد الأجهزة الفريدة =====
+        // ===== عداد الأجهزة =====
         let totalUniqueDevices = 0;
         let seenDevices = [];
         let activeDevicesMap = new Map();
@@ -1313,9 +1253,9 @@
             if (activeEl) activeEl.textContent = activeDevicesMap.size.toLocaleString('en').replace(/,/g, '.');
         }
 
-        // ===== نظام حفظ البيانات =====
+        // ===== حفظ البيانات =====
         function getStorageKey() {
-            return `xec_game_data_${getDeviceId()}`;
+            return `xec_game_data_v4_${getDeviceId()}`; // تغيير المفتاح لتفادي تعارض الإصدارات
         }
 
         function saveGameData() {
@@ -1323,25 +1263,15 @@
                 const key = getStorageKey();
                 const data = {
                     coins: gameData.coins,
-                    clickPower: gameData.clickPower,
-                    clickCost: gameData.clickCost,
                     totalClicks: gameData.totalClicks,
-                    upgradesBought: gameData.upgradesBought,
                     lastWithdraw: gameData.lastWithdraw,
                     adsWatched: gameData.adsWatched,
                     lastAdReset: gameData.lastAdReset,
-                    dailyBoostCount: gameData.dailyBoostCount,
-                    lastBoostReset: gameData.lastBoostReset,
                     referralCode: gameData.referralCode,
                     referralsCount: gameData.referralsCount,
                     referralRewards: gameData.referralRewards,
                     usedReferralCode: gameData.usedReferralCode,
-                    hasSubscribed: gameData.hasSubscribed,
-                    clickMilestone: gameData.clickMilestone || 0,
-                    // بيانات التعدين
-                    miningPower: gameData.miningPower,
-                    minedBalance: gameData.minedBalance,
-                    lastMiningUpdate: gameData.lastMiningUpdate
+                    hasSubscribed: gameData.hasSubscribed
                 };
                 localStorage.setItem(key, JSON.stringify(data));
                 console.log('✅ تم حفظ البيانات', data);
@@ -1369,12 +1299,12 @@
 
         // بيانات اللعبة
         let gameData = {};
-        const MAX_DAILY_BOOST = 5;
         const MAX_ADS = 25;
-        const WITHDRAW_AMOUNT = 5000;          // تغيير مبلغ السحب إلى 5000
+        const WITHDRAW_AMOUNT = 5000;
         const COOLDOWN = 24 * 60 * 60 * 1000;
-        const CLICK_MILESTONE = 100000;         // كل 100 ألف نقرة
-        const MILESTONE_REWARD = 5000;           // 5000 XEC
+        const CLICKS_PER_COIN = 20;  // كل 20 نقرة تعطي 1 XEC
+        const REFERRAL_BONUS = 20;    // مكافأة الإحالة 20 XEC
+        const SUBSCRIBE_BONUS = 20;   // مكافأة الاشتراك 20 XEC
 
         function initGameData() {
             const saved = loadGameData();
@@ -1382,52 +1312,31 @@
             if (saved) {
                 gameData = {
                     coins: saved.coins || 0,
-                    clickPower: saved.clickPower || 1,
-                    clickCost: saved.clickCost || 20,
                     totalClicks: saved.totalClicks || 0,
-                    upgradesBought: saved.upgradesBought || 0,
                     lastWithdraw: saved.lastWithdraw || 0,
                     adsWatched: saved.adsWatched || 0,
                     lastAdReset: saved.lastAdReset || now,
-                    dailyBoostCount: saved.dailyBoostCount || 0,
-                    lastBoostReset: saved.lastBoostReset || now,
                     referralCode: saved.referralCode || generateReferralCode(),
                     referralsCount: saved.referralsCount || 0,
                     referralRewards: saved.referralRewards || 0,
                     maxReferrals: 100,
-                    referralBonus: 1000,
                     usedReferralCode: saved.usedReferralCode || false,
-                    hasSubscribed: saved.hasSubscribed || false,
-                    clickMilestone: saved.clickMilestone || 0,
-                    // التعدين
-                    miningPower: saved.miningPower || 0.1,   // 0.1 XEC لكل ثانية
-                    minedBalance: saved.minedBalance || 0,
-                    lastMiningUpdate: saved.lastMiningUpdate || now
+                    hasSubscribed: saved.hasSubscribed || false
                 };
                 console.log('✅ تم تهيئة البيانات من المحفوظات', gameData);
             } else {
                 gameData = {
                     coins: 0,
-                    clickPower: 1,
-                    clickCost: 20,
                     totalClicks: 0,
-                    upgradesBought: 0,
                     lastWithdraw: 0,
                     adsWatched: 0,
                     lastAdReset: now,
-                    dailyBoostCount: 0,
-                    lastBoostReset: now,
                     referralCode: generateReferralCode(),
                     referralsCount: 0,
                     referralRewards: 0,
                     maxReferrals: 100,
-                    referralBonus: 1000,
                     usedReferralCode: false,
-                    hasSubscribed: false,
-                    clickMilestone: 0,
-                    miningPower: 0.1,
-                    minedBalance: 0,
-                    lastMiningUpdate: now
+                    hasSubscribed: false
                 };
                 console.log('🆕 تم إنشاء بيانات جديدة');
             }
@@ -1435,10 +1344,6 @@
             if (now - gameData.lastAdReset > COOLDOWN) {
                 gameData.adsWatched = 0;
                 gameData.lastAdReset = now;
-            }
-            if (now - gameData.lastBoostReset > COOLDOWN) {
-                gameData.dailyBoostCount = 0;
-                gameData.lastBoostReset = now;
             }
         }
 
@@ -1452,21 +1357,6 @@
             } catch (e) {}
             const randomNum = Math.floor(Math.random() * 1000000000);
             return `tg_${randomNum}`;
-        }
-
-        // دالة تحديث التعدين
-        function updateMining() {
-            const now = Date.now();
-            const elapsedSeconds = (now - gameData.lastMiningUpdate) / 1000;
-            if (elapsedSeconds > 0) {
-                const earned = elapsedSeconds * gameData.miningPower;
-                gameData.minedBalance += earned;
-                gameData.lastMiningUpdate = now;
-                // تحديث العرض
-                document.getElementById('miningBalance').textContent = gameData.minedBalance.toFixed(2);
-                document.getElementById('miningRate').textContent = gameData.miningPower.toFixed(2) + '/sec';
-                saveGameData();
-            }
         }
 
         function canWithdraw() {
@@ -1511,62 +1401,37 @@
             if (adsStat) adsStat.textContent = `${gameData.adsWatched}/${MAX_ADS}`;
         }
 
-        function updateBoostUI() {
-            const boostRemaining = document.getElementById('boostRemaining');
-            const boostsUsedStat = document.getElementById('boostsUsedStat');
-            const remaining = MAX_DAILY_BOOST - gameData.dailyBoostCount;
-            if (boostRemaining) boostRemaining.textContent = `${remaining}/${MAX_DAILY_BOOST}`;
-            if (boostsUsedStat) boostsUsedStat.textContent = `${gameData.dailyBoostCount}/${MAX_DAILY_BOOST}`;
-            
-            const upgradeBtn = document.getElementById('buyUpgrade');
-            if (gameData.dailyBoostCount >= MAX_DAILY_BOOST) {
-                upgradeBtn.disabled = true;
-            } else {
-                upgradeBtn.disabled = gameData.coins < gameData.clickCost;
-            }
-        }
-
         function updateClickAbility() {
             const coinWrapper = document.querySelector('.coin-wrapper');
             const timerMsg = document.getElementById('timerMessage');
             if (gameData.coins >= WITHDRAW_AMOUNT) {
-                coinWrapper.style.pointerEvents = 'none';
-                coinWrapper.style.opacity = '0.6';
                 const remaining = getTimeRemaining();
                 if (remaining > 0) {
                     timerMsg.style.display = 'block';
-                    timerMsg.innerHTML = `⏳ تم جمع 5,000. السحب متاح بعد: ${formatTime(remaining)}`;
+                    timerMsg.innerHTML = `⏳ الرصيد كافي، السحب متاح بعد: ${formatTime(remaining)}`;
                 } else {
                     if (gameData.adsWatched < MAX_ADS) {
                         timerMsg.style.display = 'block';
                         timerMsg.innerHTML = `📢 تحتاج مشاهدة ${MAX_ADS-gameData.adsWatched} إعلان لتتمكن من السحب`;
                     } else {
                         timerMsg.style.display = 'none';
-                        coinWrapper.style.pointerEvents = 'auto';
-                        coinWrapper.style.opacity = '1';
                     }
                 }
             } else {
-                coinWrapper.style.pointerEvents = 'auto';
-                coinWrapper.style.opacity = '1';
                 timerMsg.style.display = 'none';
             }
         }
 
         function updateUI() {
             document.getElementById('balance').textContent = Math.floor(gameData.coins).toLocaleString();
-            document.getElementById('clickPower').textContent = gameData.clickPower;
-            document.getElementById('upgradeCost').textContent = gameData.clickCost;
+            document.getElementById('totalClicksDisplay').textContent = gameData.totalClicks.toLocaleString();
             
             updateWithdrawUI();
             updateAdsUI();
-            updateBoostUI();
             updateClickAbility();
             updateTotalDevicesDisplay();
             
             document.getElementById('totalClicks').textContent = gameData.totalClicks.toLocaleString();
-            document.getElementById('currentPower').textContent = gameData.clickPower;
-            document.getElementById('upgradesBought').textContent = gameData.upgradesBought;
             
             if (gameData.lastWithdraw === 0) {
                 document.getElementById('lastWithdraw').textContent = "لم يتم";
@@ -1577,10 +1442,7 @@
             
             document.getElementById('referralsCountFooter').textContent = gameData.referralsCount;
             document.getElementById('moreValue').textContent = '📊';
-            
-            // تحديث واجهة التعدين
-            document.getElementById('miningBalance').textContent = gameData.minedBalance.toFixed(2);
-            document.getElementById('miningRate').textContent = gameData.miningPower.toFixed(2) + '/sec';
+            document.getElementById('referralsStat').textContent = `${gameData.referralsCount}/${gameData.maxReferrals}`;
             
             updateReferralUI();
             updateSubscriptionUI();
@@ -1665,11 +1527,11 @@
             }
             tg.openTelegramLink(CHANNEL_URL);
             if (!gameData.hasSubscribed) {
-                gameData.coins += 1000;
+                gameData.coins += SUBSCRIBE_BONUS;
                 gameData.hasSubscribed = true;
                 saveGameData();
                 updateUI();
-                showCentralNotification("🎉 لقد حصلت على 1000 XEC كهدية للاشتراك في القناة!", "success");
+                showCentralNotification(`🎉 لقد حصلت على ${SUBSCRIBE_BONUS} XEC كهدية للاشتراك في القناة!`, "success");
                 updateSubscriptionUI();
             }
         }
@@ -1702,7 +1564,7 @@
             }
             if (gameData.referralCode) {
                 const botLink = `https://t.me/${BOT_USERNAME}?start=${gameData.referralCode}`;
-                const shareText = `انضم إلي في لعبة CH_XEC واحصل على 1,000 XEC كمكافأة! استخدم كود الإحالة الخاص بي: ${gameData.referralCode}`;
+                const shareText = `انضم إلي في لعبة CH_XEC واحصل على 20 XEC كمكافأة! استخدم كود الإحالة الخاص بي: ${gameData.referralCode}`;
                 tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(botLink)}&text=${encodeURIComponent(shareText)}`);
                 showCentralNotification("📤 تم فتح نافذة المشاركة", "info");
             }
@@ -1728,13 +1590,13 @@
             }
             
             gameData.referralsCount++;
-            gameData.referralRewards += 1000;
-            gameData.coins += 1000;
+            gameData.referralRewards += REFERRAL_BONUS;
+            gameData.coins += REFERRAL_BONUS;
             gameData.usedReferralCode = true;
             saveGameData();
             updateUI();
             
-            showCentralNotification("✅ تم تفعيل كود الإحالة بنجاح! +1000 XEC", "success");
+            showCentralNotification(`✅ تم تفعيل كود الإحالة بنجاح! +${REFERRAL_BONUS} XEC`, "success");
             document.getElementById('inputReferralCode').value = '';
             setTimeout(() => closeModal('referralModal'), 2000);
         }
@@ -1788,46 +1650,29 @@
             }
         }
         
+        // حدث النقر على العملة
         document.getElementById('clickZone').addEventListener('click', (e) => {
-            if (gameData.coins >= WITHDRAW_AMOUNT) return;
-            
-            // إضافة العملات
-            gameData.coins += gameData.clickPower;
+            // زيادة عداد النقرات
             gameData.totalClicks++;
             
-            // التحقق من المكافأة التراكمية (كل 100,000 نقرة)
-            const milestoneReached = Math.floor(gameData.totalClicks / CLICK_MILESTONE);
-            if (milestoneReached > gameData.clickMilestone) {
-                const newMilestones = milestoneReached - gameData.clickMilestone;
-                gameData.coins += newMilestones * MILESTONE_REWARD;
-                gameData.clickMilestone = milestoneReached;
-                showCentralNotification(`🏆 إنجاز! +${newMilestones * MILESTONE_REWARD} XEC مقابل ${CLICK_MILESTONE.toLocaleString()} نقرة!`, "success");
+            // كل 20 نقرة تمنح 1 XEC
+            if (gameData.totalClicks % CLICKS_PER_COIN === 0) {
+                gameData.coins++;
+                // عرض رسالة منبثقة
+                showCentralNotification("✨ +1 XEC (20 نقرة)", "success");
             }
             
             saveGameData();
             
             const x = e.clientX, y = e.clientY;
             createClickEffect(x, y);
-            spawnFloatingNumber(x, y, gameData.clickPower);
+            spawnFloatingNumber(x, y, "1"); // عرض رقم ثابت
             updateUI();
         });
         
+        // زر التطوير معطل
         document.getElementById('buyUpgrade').addEventListener('click', () => {
-            if (gameData.dailyBoostCount >= MAX_DAILY_BOOST) {
-                showCentralNotification("❌ لقد استنفدت جميع التعزيزات اليومية", "error");
-                return;
-            }
-            if (gameData.coins >= gameData.clickCost) {
-                gameData.coins -= gameData.clickCost;
-                gameData.clickPower++;
-                gameData.clickCost = Math.floor(gameData.clickCost * 1.8);
-                gameData.upgradesBought++;
-                gameData.dailyBoostCount++;
-                saveGameData();
-                
-                showCentralNotification(`🎉 تم التعزيز! قوة النقر الجديدة: ${gameData.clickPower}`, "success");
-                updateUI();
-            }
+            showCentralNotification("❌ ميزة التطوير غير متاحة حالياً", "error");
         });
         
         document.getElementById('subscribeBtn').addEventListener('click', subscribeToChannel);
@@ -1868,19 +1713,6 @@
             openModal('referralModal');
         });
         document.getElementById('moreFooterBtn').addEventListener('click', () => openModal('statsModal'));
-        
-        // زر جمع التعدين
-        document.getElementById('collectMiningBtn').addEventListener('click', () => {
-            if (gameData.minedBalance > 0) {
-                gameData.coins += gameData.minedBalance;
-                showCentralNotification(`✅ تم جمع ${gameData.minedBalance.toFixed(2)} XEC من التعدين`, "success");
-                gameData.minedBalance = 0;
-                saveGameData();
-                updateUI();
-            } else {
-                showCentralNotification("ℹ️ لا يوجد رصيد تعدين لجمع", "info");
-            }
-        });
         
         setTimeout(() => {
             const shareBtn = document.getElementById('shareReferralBtn');
@@ -1963,14 +1795,14 @@
             const refCode = urlParams.get('ref') || urlParams.get('start');
             if (refCode && !gameData.usedReferralCode) {
                 gameData.referralsCount++;
-                gameData.referralRewards += 1000;
-                gameData.coins += 1000;
+                gameData.referralRewards += REFERRAL_BONUS;
+                gameData.coins += REFERRAL_BONUS;
                 gameData.usedReferralCode = true;
                 saveGameData();
                 updateUI();
                 
                 setTimeout(() => {
-                    showCentralNotification(`🎁 مرحباً بك! تم تفعيل كود الإحالة ${refCode} وحصلت على 1000 XEC`, "success");
+                    showCentralNotification(`🎁 مرحباً بك! تم تفعيل كود الإحالة ${refCode} وحصلت على ${REFERRAL_BONUS} XEC`, "success");
                     showCentralNotification("👥 ادعُ أصدقاءك الآن واحصل على المزيد!", "info");
                 }, 2000);
             }
@@ -2013,10 +1845,10 @@
             loadReferralFromURL();
             disableReferralOnBrowser();
 
-            // بدء دورة التعدين كل ثانية
+            // لا يوجد تعدين، لذا لا حاجة لتكرار التحديث
             setInterval(() => {
-                updateMining();
-                updateUI(); // تحديث واجهة التعدين
+                // فقط للتأكد من تحديث واجهة الوقت
+                updateUI();
             }, 1000);
 
             setTimeout(() => {
@@ -2037,14 +1869,14 @@
                 setTimeout(() => hint.style.display = 'none', 500);
             }, 10000);
             
-            setTimeout(() => showCentralNotification("🎮 مرحباً بك! ابدأ بالضغط على العملة", "success"), 1500);
+            setTimeout(() => showCentralNotification("🎮 مرحباً بك! كل 20 نقرة = 1 XEC", "success"), 1500);
             setTimeout(() => {
                 if (isTelegram) {
-                    showCentralNotification("👥 نظام الإحالة: احصل على 1,000 XEC لكل دعوة!", "info");
+                    showCentralNotification(`👥 نظام الإحالة: احصل على ${REFERRAL_BONUS} XEC لكل دعوة!`, "info");
                 }
             }, 3000);
             setTimeout(() => {
-                if (!gameData.hasSubscribed) showCentralNotification("📢 اشترك في قناتنا واحصل على 1000 XEC مجانية!", "warning");
+                if (!gameData.hasSubscribed) showCentralNotification(`📢 اشترك في قناتنا واحصل على ${SUBSCRIBE_BONUS} XEC مجانية!`, "warning");
             }, 5000);
         }
         
@@ -2063,10 +1895,10 @@
             }
             if (gameData.referralsCount < gameData.maxReferrals) {
                 gameData.referralsCount++;
-                gameData.referralRewards += 1000;
-                gameData.coins += 1000;
+                gameData.referralRewards += REFERRAL_BONUS;
+                gameData.coins += REFERRAL_BONUS;
                 saveGameData();
-                showCentralNotification(`🎉 تمت إضافة دعوة جديدة! +1,000 XEC`, "success");
+                showCentralNotification(`🎉 تمت إضافة دعوة جديدة! +${REFERRAL_BONUS} XEC`, "success");
                 updateUI();
             } else showCentralNotification("❌ وصلت للحد الأقصى من الدعوات (100)", "error");
         }
